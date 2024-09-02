@@ -7,6 +7,12 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
+import { Padding } from "@mui/icons-material";
+import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { ruRU } from "@mui/x-date-pickers/locales";
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+import dayjs from "dayjs";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -101,51 +107,22 @@ const oilFields = [
   },
 ];
 
-export default function Header() {
+let today = new Date().toISOString().slice(0, 10)
+
+export default function OilWells() {
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static">
-        <Toolbar>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            MUI
-          </Typography>
-          <Box
-            sx={{ overflowX: "auto", overflowY: "hidden", marginX: "30px", display: "flex" }}
-          >
-            <Box
-              sx={{
-                flexGrow: 1,
-                display: "flex",
-                justifyContent: "flex-end",
-                flexShrink: 0,
-                flexWrap: "nowrap",
-                columnGap: "5px"
-              }}
-            >
-              {oilFields.map((oilField) => (
-                <Button
-                  key={oilField?.projectId}
-                  // onClick={handleCloseNavMenu}
-                  sx={{ my: 2, color: "white", display: "block", whiteSpace: "nowrap", textAlign: "center" }}
-                >
-                  {oilField?.projectName}
-                </Button>
-              ))}
-            </Box>
-          </Box>
-          <Search
-            sx={{ display: { xs: "none", sm: "block", marginLeft: "20px" } }}
-          >
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="Search…"
-              inputProps={{ "aria-label": "search" }}
-            />
-          </Search>
-        </Toolbar>
-      </AppBar>
+    <Box sx={{ paddingX: "30px", paddingY: "10px", display: "flex" }}>
+      <Typography variant="h6" gutterBottom>
+        Харасавэйское месторождение
+      </Typography>
+      <LocalizationProvider
+        localeText={
+          ruRU.components.MuiLocalizationProvider.defaultProps.localeText
+        }
+        dateAdapter={AdapterDayjs}
+      >
+        <DateCalendar sx={{ marginRight: "0" }} defaultValue={dayjs()} />
+      </LocalizationProvider>
     </Box>
   );
 }
