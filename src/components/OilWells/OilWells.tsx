@@ -11,8 +11,9 @@ import { Padding } from "@mui/icons-material";
 import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { ruRU } from "@mui/x-date-pickers/locales";
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
+import OilWellCard from "../OilWellCard/OilWellCard";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -107,21 +108,36 @@ const oilFields = [
   },
 ];
 
-let today = new Date().toISOString().slice(0, 10)
+let today = new Date().toISOString().slice(0, 10);
 
 export default function OilWells() {
   return (
     <Box sx={{ paddingX: "30px", paddingY: "10px", display: "flex" }}>
-      <Typography variant="h6" gutterBottom>
-        Харасавэйское месторождение
-      </Typography>
+      <Box sx={{ maxWidth: "100%", overflowY: "hidden", overflowX: "scroll" }}>
+        <Typography variant="h6" gutterBottom>
+          Харасавэйское месторождение
+        </Typography>
+        <Box>
+          <Box sx={{ display: "flex", gap: "25px" }}>
+            <OilWellCard />
+            <OilWellCard />
+            <OilWellCard />
+            <OilWellCard />
+            <OilWellCard />
+          </Box>
+        </Box>
+      </Box>
+
       <LocalizationProvider
         localeText={
           ruRU.components.MuiLocalizationProvider.defaultProps.localeText
         }
         dateAdapter={AdapterDayjs}
       >
-        <DateCalendar sx={{ marginRight: "0" }} defaultValue={dayjs()} />
+        <DateCalendar
+          sx={{ marginRight: "0", flexShrink: 0 }}
+          defaultValue={dayjs()}
+        />
       </LocalizationProvider>
     </Box>
   );
