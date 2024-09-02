@@ -52,9 +52,10 @@ const card = (
   </React.Fragment>
 );
 
-export default function OilWellCard() {
+export default function OilWellCard({ title }: {title: string}) {
   return (
     <Box sx={{ minWidth: 275 }}>
+      <p>{ title }</p>
       <Card variant="outlined">{card}</Card>
     </Box>
   );

@@ -26,16 +26,23 @@ export default function OilWells() {
   };
 
   return (
-    <Box sx={{ paddingX: "30px", paddingY: "10px", display: "flex", flexWrap: 'wrap' }}>
-      <Box sx={{ maxWidth: "100%",  flexShrink: 1 }}>
+    <Box
+      sx={{
+        paddingX: "30px",
+        paddingY: "10px",
+        display: "flex",
+        flexWrap: "nowrap",
+      }}
+    >
+      <Box sx={{ maxWidth: "100%", flexShrink: 1, minWidth: "275px" }}>
         <Typography variant="h6" gutterBottom>
           Харасавэйское месторождение
         </Typography>
-        <Box sx={{overflowY: "hidden", overflowX: "scroll",}}>
+        <Box sx={{ overflowY: "hidden", overflowX: "hidden" }}>
           <Box sx={{ display: "flex", gap: "25px" }}>
-            {[0, 1, 2, 3, 4,]
-              .map(() => <OilWellCard />)
-              .slice(page, rowsPerPage)}
+            {[0, 1, 2, 3, 4]
+              .map((i) => <OilWellCard title={(i + 1).toFixed()} />)
+              .slice(page * rowsPerPage,)}
           </Box>
         </Box>
         <TablePagination

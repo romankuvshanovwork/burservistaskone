@@ -17,6 +17,7 @@ type Person = {
 //   Проверить согласованность наименований
 };
 
+// TODO: Переименовать все
 //nested data is ok, see accessorKeys in ColumnDef below
 const data: Person[] = [
   {
