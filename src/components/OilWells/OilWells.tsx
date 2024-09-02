@@ -27,11 +27,11 @@ export default function OilWells() {
 
   return (
     <Box sx={{ paddingX: "30px", paddingY: "10px", display: "flex", flexWrap: 'wrap' }}>
-      <Box sx={{ maxWidth: "100%", overflowY: "hidden", overflowX: "scroll", flexShrink: 1 }}>
+      <Box sx={{ maxWidth: "100%",  flexShrink: 1 }}>
         <Typography variant="h6" gutterBottom>
           Харасавэйское месторождение
         </Typography>
-        <Box>
+        <Box sx={{overflowY: "hidden", overflowX: "scroll",}}>
           <Box sx={{ display: "flex", gap: "25px" }}>
             {[0, 1, 2, 3, 4,]
               .map(() => <OilWellCard />)

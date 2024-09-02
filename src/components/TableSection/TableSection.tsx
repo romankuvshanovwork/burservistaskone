@@ -9,61 +9,64 @@ import Typography from "@mui/material/Typography";
 
 //example data type
 type Person = {
-  name: {
-    firstName: string;
-    lastName: string;
-  };
-  address: string;
-  city: string;
-  state: string;
+  type: string;
+  date: string;
+  number: string;
+  description: string;
+  event: string;
+//   Проверить согласованность наименований
 };
 
 //nested data is ok, see accessorKeys in ColumnDef below
 const data: Person[] = [
   {
-    name: {
-      firstName: "John",
-      lastName: "Doe",
-    },
-    address: "261 Erdman Ford",
-    city: "East Daphne",
-    state: "Kentucky",
+    type: "Суточный",
+    date: "01.04.2024",
+    number: "46",
+    description: "ВМР. Движка БУ 15м, на скважину 2075",
+    event: "ВМР",
   },
   {
-    name: {
-      firstName: "Jane",
-      lastName: "Doe",
-    },
-    address: "769 Dominic Grove",
-    city: "Columbus",
-    state: "Ohio",
+    type: "Суточный",
+    date: "01.03.2024",
+    number: "45",
+    description: "ВМР. Движка БУ 15м, на скважину 2075",
+    event: "ВМР",
   },
   {
-    name: {
-      firstName: "Joe",
-      lastName: "Doe",
-    },
-    address: "566 Brakus Inlet",
-    city: "South Linda",
-    state: "West Virginia",
+    type: "Суточный",
+    date: "01.02.2024",
+    number: "44",
+    description: "ВМР. Движка БУ 15м, на скважину 2075",
+    event: "ВМР",
   },
   {
-    name: {
-      firstName: "Kevin",
-      lastName: "Vandy",
-    },
-    address: "722 Emie Stream",
-    city: "Lincoln",
-    state: "Nebraska",
+    type: "Суточный",
+    date: "01.01.2024",
+    number: "43",
+    description: "ВМР. Движка БУ 15м, на скважину 2075",
+    event: "ВМР",
   },
   {
-    name: {
-      firstName: "Joshua",
-      lastName: "Rolluffs",
-    },
-    address: "32188 Larkin Turnpike",
-    city: "Omaha",
-    state: "Nebraska",
+    type: "Суточный",
+    date: "12.31.2023",
+    number: "42",
+    description: "ВМР. Движка БУ 15м, на скважину 2075",
+    event: "ВМР",
+  },
+  {
+    type: "Суточный",
+    date: "12.30.2023",
+    number: "41",
+    description: "ВМР. Движка БУ 15м, на скважину 2075",
+    event: "ВМР",
+  },
+  {
+    type: "Суточный",
+    date: "12.29.2023",
+    number: "40",
+    description: "ВМР. Движка БУ 15м, на скважину 2075",
+    event: "ВМР",
   },
 ];
 
@@ -72,31 +75,37 @@ const TableSection = () => {
   const columns = useMemo<MRT_ColumnDef<Person>[]>(
     () => [
       {
-        accessorKey: "name.firstName", //access nested data with dot notation
-        header: "First Name",
-        size: 150,
+        accessorKey: "type", //access nested data with dot notation
+        header: "Тип",
+        size: 100,
+        enableSorting: false,
       },
       {
-        accessorKey: "name.lastName",
-        header: "Last Name",
-        size: 150,
+        accessorKey: "date",
+        header: "Дата",
+        size: 130,
+        accessorFn: (row) => new Date(row.date),
+        Cell: ({ cell }) => cell.getValue<Date>()?.toLocaleDateString(), //render Date as a string
       },
       {
-        accessorKey: "address", //normal accessorKey
-        header: "Address",
+        accessorKey: "number", //normal accessorKey
+        header: "№",
+        size: 50,
+        enableSorting: false,
+      },
+      {
+        accessorKey: "description",
+        header: "Описание",
         size: 200,
-      },
-      {
-        accessorKey: "city",
-        header: "City",
-        size: 150,
-      },
-      {
-        accessorKey: "state",
-        header: "State",
-        size: 150,
-        enableResizing: false,
+        enableSorting: false,
         grow: true,
+      },
+      {
+        accessorKey: "event",
+        header: "Мероприятие",
+        size: 100,
+        enableResizing: false,
+        enableSorting: false,
       },
     ],
     []
@@ -110,6 +119,14 @@ const TableSection = () => {
     enablePagination: false,
     enableBottomToolbar: false,
     enableColumnResizing: true,
+    initialState: {
+        sorting: [
+          {
+            id: 'date', //sort by age by default on page load
+            desc: true,
+          },
+        ],
+      },
   });
 
   return (
