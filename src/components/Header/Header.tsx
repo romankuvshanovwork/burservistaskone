@@ -8,6 +8,7 @@ import Typography from "@mui/material/Typography";
 import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
 import { IProject } from "../../interfaces/IProject";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -58,6 +59,9 @@ export default function Header({
   onProjectChange: Function;
 }) {
   const [projects, setProjects] = useState<IProject[]>([]);
+  const [serachQuery, setSearchQuery] = useState<string>();
+  const navigate = useNavigate();
+
   useEffect(() => {
     fetch(
       "https://edmrest.emeryone.com/Universal/CdProjectSource?fields=projectName,projectId"
@@ -69,10 +73,16 @@ export default function Header({
         // TODO: Убрать все console.log
         console.log("Все проекты");
         console.log(data);
+
         setProjects(data);
-        onProjectChange(data?.[0]);
+        const firstProject = data?.[0];
+        onProjectChange(firstProject);
+        navigate(`/projectId/${firstProject?.projectId}`);
+      })
+      .catch(() => {
+        // TODO: Сделать catch
       });
-  }, [onProjectChange]);
+  }, []);
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -99,21 +109,31 @@ export default function Header({
                 columnGap: "5px",
               }}
             >
-              {projects.map((project) => (
-                <Button
-                  key={project?.projectId}
-                  onClick={() => onProjectChange(project)}
-                  sx={{
-                    my: 2,
-                    color: "white",
-                    display: "block",
-                    whiteSpace: "nowrap",
-                    textAlign: "center",
-                  }}
-                >
-                  {project?.projectName}
-                </Button>
-              ))}
+              {projects
+                .filter((project) =>
+                  serachQuery
+                    ? project?.projectName
+                        ?.toLocaleLowerCase()
+                        ?.includes(serachQuery?.toLocaleLowerCase())
+                    : true
+                )
+                .map((project) => (
+                  <Button
+                    component={RouterLink}
+                    to={`/projectId/${project?.projectId}`}
+                    key={project?.projectId}
+                    onClick={() => onProjectChange(project)}
+                    sx={{
+                      my: 2,
+                      color: "white",
+                      display: "block",
+                      whiteSpace: "nowrap",
+                      textAlign: "center",
+                    }}
+                  >
+                    {project?.projectName}
+                  </Button>
+                ))}
             </Box>
           </Box>
           <Search
@@ -125,6 +145,7 @@ export default function Header({
             <StyledInputBase
               placeholder="Search…"
               inputProps={{ "aria-label": "search" }}
+              onChange={(e) => setSearchQuery(e.target.value)}
             />
           </Search>
         </Toolbar>
