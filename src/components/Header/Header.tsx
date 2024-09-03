@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useEffect, useState } from "react";
 import { styled, alpha } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -7,6 +7,7 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
+import { IProject } from "../../interfaces/IProject";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -38,7 +39,6 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   width: "100%",
   "& .MuiInputBase-input": {
     padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
     paddingLeft: `calc(1em + ${theme.spacing(4)})`,
     transition: theme.transitions.create("width"),
     [theme.breakpoints.up("sm")]: {
@@ -50,59 +50,30 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-const oilFields = [
-  {
-    projectId: "2sIZcsJ7vO",
-    projectName: "Харасавэйское ГКМ",
-  },
-  {
-    projectId: "fwhEKhXAyx",
-    projectName: "ытбю25",
-  },
-  {
-    projectId: "GadwkSKXF1",
-    projectName: "ж28эж7",
-  },
-  {
-    projectId: "j8P03Tt0LJ",
-    projectName: "Titonskaya",
-  },
-  {
-    projectId: "KoljDdZQjR",
-    projectName: "Platform P",
-  },
-  {
-    projectId: "mSl520hysn",
-    projectName: "Воронцовское",
-  },
-  {
-    projectId: "NBeV0cKIPk",
-    projectName: "Project #1",
-  },
-  {
-    projectId: "ON13eb6Fur",
-    projectName: "Field",
-  },
-  {
-    projectId: "rktfcGyavc",
-    projectName: "OiL",
-  },
-  {
-    projectId: "TquV8ob4hi",
-    projectName: "Train Field",
-  },
-  {
-    projectId: "TuWhJstxXJ",
-    projectName: "Уренгойское НГКМ",
-  },
-  {
-    projectId: "zSxooZxvIF",
-    projectName: "ODOPTU",
-  },
-];
+export default function Header({
+  project,
+  onProjectChange,
+}: {
+  project: any;
+  onProjectChange: Function;
+}) {
+  const [projects, setProjects] = useState<IProject[]>([]);
+  useEffect(() => {
+    fetch(
+      "https://edmrest.emeryone.com/Universal/CdProjectSource?fields=projectName,projectId"
+    )
+      .then((res) => {
+        return res.json();
+      })
+      .then((data) => {
+        // TODO: Убрать все console.log
+        console.log("Все проекты");
+        console.log(data);
+        setProjects(data);
+        onProjectChange(data?.[0]);
+      });
+  }, [onProjectChange]);
 
-// TODO: Переименовать в AppBar
-export default function Header() {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
@@ -111,7 +82,12 @@ export default function Header() {
             MUI
           </Typography>
           <Box
-            sx={{ overflowX: "auto", overflowY: "hidden", marginX: "30px", display: "flex" }}
+            sx={{
+              overflowX: "auto",
+              overflowY: "hidden",
+              marginX: "30px",
+              display: "flex",
+            }}
           >
             <Box
               sx={{
@@ -120,16 +96,22 @@ export default function Header() {
                 justifyContent: "flex-end",
                 flexShrink: 0,
                 flexWrap: "nowrap",
-                columnGap: "5px"
+                columnGap: "5px",
               }}
             >
-              {oilFields.map((oilField) => (
+              {projects.map((project) => (
                 <Button
-                  key={oilField?.projectId}
-                  // onClick={handleCloseNavMenu}
-                  sx={{ my: 2, color: "white", display: "block", whiteSpace: "nowrap", textAlign: "center" }}
+                  key={project?.projectId}
+                  onClick={() => onProjectChange(project)}
+                  sx={{
+                    my: 2,
+                    color: "white",
+                    display: "block",
+                    whiteSpace: "nowrap",
+                    textAlign: "center",
+                  }}
                 >
-                  {oilField?.projectName}
+                  {project?.projectName}
                 </Button>
               ))}
             </Box>
