@@ -94,6 +94,7 @@ export default function OilWellCard({
               {uniqueEvents?.map((uniqueEvent) => (
                 <Chip
                   label={uniqueEvent}
+                  key={uniqueEvent}
                   color="primary"
                   variant={
                     eventFilters.includes(uniqueEvent) &&

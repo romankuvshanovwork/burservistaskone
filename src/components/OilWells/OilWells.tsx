@@ -9,6 +9,8 @@ import OilWellCard from "../OilWellCard/OilWellCard";
 import TablePagination from "@mui/material/TablePagination/TablePagination";
 import { useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
+import { IWell } from "../../interfaces/IWell";
+import { ISite } from "../../interfaces/ISite";
 
 export default function OilWells({
   wellId,
@@ -26,7 +28,9 @@ export default function OilWells({
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(3);
 
-  const [wellsWithSiteData, setWellsWithSiteData] = useState<any[]>([]);
+  const [wellsWithSiteData, setWellsWithSiteData] = useState<(IWell & ISite)[]>(
+    []
+  );
 
   const routeParams = useParams();
   const location = useLocation();
@@ -95,6 +99,11 @@ export default function OilWells({
                 {wellsWithSiteData
                   .map((wellWithSiteData) => (
                     <OilWellCard
+                      key={
+                        wellWithSiteData?.projectId +
+                        wellWithSiteData?.siteId +
+                        wellWithSiteData?.wellId
+                      }
                       wellId={wellId}
                       onWellIdChange={onWellIdChange}
                       wellWithSiteData={wellWithSiteData}
