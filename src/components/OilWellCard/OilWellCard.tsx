@@ -43,10 +43,6 @@ export default function OilWellCard({
         return res.json();
       })
       .then((events) => {
-        // TODO: Убрать все console.log
-        console.log("events");
-        console.log(events);
-
         const uniqueEvents = events
           ?.map((event: IEvent) => event?.eventCode)
           .filter((x: any, i: any, a: any) => a.indexOf(x) === i);
@@ -94,7 +90,6 @@ export default function OilWellCard({
               Дата забуривания: <br></br>{" "}
               {wellWithSiteData?.spudDate ? spudDateLocal : "Нет данных"}
             </Typography>
-            {/* TODO: Заменить на Grid? Спросить про dry здесь? */}
             <Box sx={{ display: "flex", gap: "10px", marginBottom: "5px" }}>
               {uniqueEvents?.map((uniqueEvent) => (
                 <Chip

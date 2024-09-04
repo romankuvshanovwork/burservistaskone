@@ -66,10 +66,6 @@ export default function Header() {
         return res.json();
       })
       .then((projects) => {
-        // TODO: Убрать все console.log
-        console.log("Все проекты");
-        console.log(projects);
-
         setProjects(projects);
         const firstProject = projects?.[0];
         if (!routeParams?.projectId)
@@ -77,9 +73,7 @@ export default function Header() {
             state: { projectName: firstProject?.projectName },
           });
       })
-      .catch(() => {
-        // TODO: Сделать catch
-      });
+      .catch(() => {});
   }, []);
 
   return (
@@ -108,7 +102,6 @@ export default function Header() {
               }}
             >
               {projects
-                //   TODO: Скорее всего вынести в useEffect
                 .filter((project) =>
                   serachQuery
                     ? project?.projectName

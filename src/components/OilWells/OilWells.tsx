@@ -24,7 +24,6 @@ export default function OilWells({
   eventFilters: any;
 }) {
   const [page, setPage] = React.useState(0);
-  //   TODO: Сделать rowsPerPage взависимости от ширины экрана в useEffect
   const [rowsPerPage, setRowsPerPage] = React.useState(3);
 
   const [wellsWithSiteData, setWellsWithSiteData] = useState<any[]>([]);
@@ -50,13 +49,7 @@ export default function OilWells({
         return res.json();
       })
       .then((sites) => {
-        // TODO: Убрать все console.log
-        console.log("sites");
-        console.log(sites);
-
         const allSites = sites.map((site: any) => site?.siteId).join();
-        console.log("all sites as a string");
-        console.log(allSites);
 
         if (allSites) {
           fetch(
@@ -66,18 +59,13 @@ export default function OilWells({
               return res.json();
             })
             .then((wells) => {
-              console.log("wells");
-              console.log(wells);
               onWellIdChange(wells[0]?.wellId);
-              // TODO: Сделать sort по кусту
               setWellsWithSiteData(
                 wells.map((well: any) => ({
                   ...well,
                   ...sites.find((site: any) => site.siteId === well.siteId),
                 }))
               );
-              console.log("combinedData");
-              console.log(wellsWithSiteData);
             });
         } else {
           setWellsWithSiteData([]);
@@ -98,7 +86,6 @@ export default function OilWells({
       <Box sx={{ maxWidth: "100%", flexShrink: 1, minWidth: "275px" }}>
         <Typography variant="h6" gutterBottom>
           {projectName}
-          {/* {sites?.length} {wells?.length} */}
         </Typography>
 
         {wellsWithSiteData.length > 0 ? (
@@ -119,7 +106,6 @@ export default function OilWells({
                   .slice(page * rowsPerPage)}
               </Box>
             </Box>
-            {/* TODO: Добавить анимацию при листании */}
             {wellsWithSiteData?.length > 3 && (
               <TablePagination
                 component="div"
