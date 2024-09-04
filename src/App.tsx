@@ -1,28 +1,45 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React from "react";
 import Header from "./components/Header/Header";
 import "./App.css";
 import OilWells from "./components/OilWells/OilWells";
 import TableSection from "./components/TableSection/TableSection";
-import TableSectionSecond from "./components/TableSectionSecond/TableSectionSecond";
-import { IProject } from "./interfaces/IProject";
+import { Route, Routes } from "react-router-dom";
+import { IWell } from "./interfaces/IWell";
 
 // TODO: Посмотреть race conditions
+// TODO: Проверить DRY везде
+// TODO: Добавить вопросы в комментарии
 
 function App() {
-  const [project, setProject] = React.useState<IProject>(); // Месторождение
-  const [siteId, setSiteId] = React.useState(0); // Куст
-  const [wellId, setWellId] = React.useState(0); // Cкважина
-  const [wellboreId, setWellboreId] = React.useState(0); // Cтвол
-  const [eventId, setEventId] = React.useState(0); // Мероприятия
+  // TODO: Удалить перед отправкой
+  const [curentWell, setCurrentWell] = React.useState<IWell>(); // Cкважина
+  const [wellId, setWellId] = React.useState(0); // Текущая выбранная скважина
+  const [isGenPlanFilterOn, setIsGenPlanFilterOn] = React.useState(false); // Включен ли фильтр по ген. плану
+  const [eventFilters, setEventFilters] = React.useState([]); // Массив с фильтрами
 
   return (
-    <Fragment>
-      <p>{wellId}</p>
-      <Header project={project} onProjectChange={setProject} />
-      <OilWells project={project} wellId={wellId} onWellIdChange={setWellId} />
-      <TableSection wellId={wellId} />
-      <TableSectionSecond wellId={wellId} />
-    </Fragment>
+    <Routes>
+      <Route
+        path="/projectId/:projectId"
+        element={
+          <>
+            <Header />
+            <OilWells
+              wellId={wellId}
+              onWellIdChange={setWellId}
+              onIsGenPlanFilterOnChange={setIsGenPlanFilterOn}
+              eventFilters={eventFilters}
+              onEventFiltersChange={setEventFilters}
+            />
+            <TableSection
+              wellId={wellId}
+              isGenPlanFilterOn={isGenPlanFilterOn}
+              eventFilters={eventFilters}
+            />
+          </>
+        }
+      />
+    </Routes>
   );
 }
 

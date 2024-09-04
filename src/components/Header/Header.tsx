@@ -9,6 +9,7 @@ import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
 import { IProject } from "../../interfaces/IProject";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -51,15 +52,10 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-export default function Header({
-  project,
-  onProjectChange,
-}: {
-  project: any;
-  onProjectChange: Function;
-}) {
+export default function Header() {
   const [projects, setProjects] = useState<IProject[]>([]);
   const [serachQuery, setSearchQuery] = useState<string>();
+  const routeParams = useParams();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -69,15 +65,17 @@ export default function Header({
       .then((res) => {
         return res.json();
       })
-      .then((data) => {
+      .then((projects) => {
         // TODO: Убрать все console.log
         console.log("Все проекты");
-        console.log(data);
+        console.log(projects);
 
-        setProjects(data);
-        const firstProject = data?.[0];
-        onProjectChange(firstProject);
-        navigate(`/projectId/${firstProject?.projectId}`);
+        setProjects(projects);
+        const firstProject = projects?.[0];
+        if (!routeParams?.projectId)
+          navigate(`/projectId/${firstProject?.projectId}`, {
+            state: { projectName: firstProject?.projectName },
+          });
       })
       .catch(() => {
         // TODO: Сделать catch
@@ -110,6 +108,7 @@ export default function Header({
               }}
             >
               {projects
+                //   TODO: Скорее всего вынести в useEffect
                 .filter((project) =>
                   serachQuery
                     ? project?.projectName
@@ -121,8 +120,8 @@ export default function Header({
                   <Button
                     component={RouterLink}
                     to={`/projectId/${project?.projectId}`}
+                    state={{ projectName: project?.projectName }}
                     key={project?.projectId}
-                    onClick={() => onProjectChange(project)}
                     sx={{
                       my: 2,
                       color: "white",

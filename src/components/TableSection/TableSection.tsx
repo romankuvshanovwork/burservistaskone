@@ -1,95 +1,106 @@
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   MaterialReactTable,
   useMaterialReactTable,
   type MRT_ColumnDef,
+  type MRT_ColumnFiltersState,
 } from "material-react-table";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+import { IReport } from "../../interfaces/IReport";
 
-//example data type
-type Person = {
-  type: string;
-  date: string;
-  number: string;
-  description: string;
-  event: string;
-//   Проверить согласованность наименований
-};
-
-// TODO: Переименовать все
-//nested data is ok, see accessorKeys in ColumnDef below
-const data: Person[] = [
-  {
-    type: "Суточный",
-    date: "01.04.2024",
-    number: "46",
-    description: "ВМР. Движка БУ 15м, на скважину 2075",
-    event: "ВМР",
-  },
-  {
-    type: "Суточный",
-    date: "01.03.2024",
-    number: "45",
-    description: "ВМР. Движка БУ 15м, на скважину 2075",
-    event: "ВМР",
-  },
-  {
-    type: "Суточный",
-    date: "01.02.2024",
-    number: "44",
-    description: "ВМР. Движка БУ 15м, на скважину 2075",
-    event: "ВМР",
-  },
-  {
-    type: "Суточный",
-    date: "01.01.2024",
-    number: "43",
-    description: "ВМР. Движка БУ 15м, на скважину 2075",
-    event: "ВМР",
-  },
-  {
-    type: "Суточный",
-    date: "12.31.2023",
-    number: "42",
-    description: "ВМР. Движка БУ 15м, на скважину 2075",
-    event: "ВМР",
-  },
-  {
-    type: "Суточный",
-    date: "12.30.2023",
-    number: "41",
-    description: "ВМР. Движка БУ 15м, на скважину 2075",
-    event: "ВМР",
-  },
-  {
-    type: "Суточный",
-    date: "12.29.2023",
-    number: "40",
-    description: "ВМР. Движка БУ 15м, на скважину 2075",
-    event: "ВМР",
-  },
+const reports = [
+  { type: "Суточный", alias: "DDR" },
+  { type: "Крепление", alias: "CASING" },
+  { type: "Цнементирование", alias: "GEN_CMT" },
+  { type: "Планирование", alias: "GEN_PLAN" },
 ];
 
-const TableSection = () => {
-  //should be memoized or stable
-  const columns = useMemo<MRT_ColumnDef<Person>[]>(
+const TableSection = ({
+  wellId,
+  isGenPlanFilterOn,
+  eventFilters,
+}: {
+  wellId: number;
+  isGenPlanFilterOn?: boolean;
+  eventFilters: any;
+}) => {
+  //data and fetching state
+  const [data, setData] = useState<IReport[]>([]);
+  const [isError, setIsError] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isRefetching, setIsRefetching] = useState(false);
+  const [rowCount, setRowCount] = useState(0);
+
+  //table state
+  const [columnFilters, setColumnFilters] = useState<MRT_ColumnFiltersState>(
+    []
+  );
+  const [globalFilter, setGlobalFilter] = useState("");
+
+  useEffect(() => {
+    const filters = [];
+    if (eventFilters?.length) {
+      filters.push({
+        id: "eventCode",
+        value: Array.isArray(eventFilters) ? eventFilters : [eventFilters],
+      });
+    }
+    if (isGenPlanFilterOn) {
+      filters.push({ id: "reportAlias", value: "GEN_PLAN" });
+    }
+    setColumnFilters(filters);
+  }, [isGenPlanFilterOn, eventFilters]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!data?.length) {
+        setIsLoading(true);
+      } else {
+        setIsRefetching(true);
+      }
+
+      try {
+        const response = await fetch(
+          `https://edmrest.emeryone.com/Universal/DmReportJournal/wellId/${wellId}/?fields=eventCode,reportJournalId,wellId,wellboreId,dateReport,eventId,reportAlias,description,entityType,reportNo`
+        );
+        const json = (await response.json()) as IReport[];
+        setData(json);
+        setRowCount(json.length);
+      } catch (error) {
+        setIsError(true);
+        console.error(error);
+        return;
+      }
+      setIsError(false);
+      setIsLoading(false);
+      setIsRefetching(false);
+    };
+    fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [columnFilters, globalFilter, wellId]);
+
+  const columns = useMemo<MRT_ColumnDef<IReport>[]>(
     () => [
       {
-        accessorKey: "type", //access nested data with dot notation
+        accessorKey: "reportAlias",
         header: "Тип",
         size: 100,
         enableSorting: false,
+        filterVariant: "text",
+        Cell: ({ cell }) =>
+          reports.find((report) => report?.alias === cell.getValue())?.type ||
+          "Нет данных",
       },
       {
-        accessorKey: "date",
+        accessorKey: "dateReport",
         header: "Дата",
         size: 130,
-        accessorFn: (row) => new Date(row.date),
-        Cell: ({ cell }) => cell.getValue<Date>()?.toLocaleDateString(), //render Date as a string
+        accessorFn: (row) => new Date(row.dateReport),
+        Cell: ({ cell }) => cell.getValue<Date>()?.toLocaleDateString(),
       },
       {
-        accessorKey: "number", //normal accessorKey
+        accessorKey: "reportNo",
         header: "№",
         size: 50,
         enableSorting: false,
@@ -100,13 +111,16 @@ const TableSection = () => {
         size: 200,
         enableSorting: false,
         grow: true,
+        filterVariant: "text",
+        Cell: ({ cell }) => cell.getValue<String>() || "Нет данных",
       },
       {
-        accessorKey: "event",
+        accessorKey: "eventCode",
         header: "Мероприятие",
         size: 100,
         enableResizing: false,
         enableSorting: false,
+        filterVariant: "multi-select",
       },
     ],
     []
@@ -114,20 +128,42 @@ const TableSection = () => {
 
   const table = useMaterialReactTable({
     columns,
-    data, //data must be memoized or stable (useState, useMemo, defined outside of this component, etc.)
+    data,
+    enableRowSelection: false,
     enableColumnActions: false,
     enableTopToolbar: false,
     enablePagination: false,
     enableBottomToolbar: false,
     enableColumnResizing: true,
+    manualFiltering: false,
+    enableColumnFilters: false,
+    manualSorting: false,
+    enableFacetedValues: true,
     initialState: {
-        sorting: [
-          {
-            id: 'date', //sort by age by default on page load
-            desc: true,
-          },
-        ],
-      },
+      sorting: [
+        {
+          id: "dateReport",
+          desc: true,
+        },
+      ],
+      showColumnFilters: true,
+    },
+    muiToolbarAlertBannerProps: isError
+      ? {
+          color: "error",
+          children: "Error loading data",
+        }
+      : undefined,
+    onColumnFiltersChange: setColumnFilters,
+    onGlobalFilterChange: setGlobalFilter,
+    rowCount,
+    state: {
+      columnFilters,
+      globalFilter,
+      isLoading,
+      showAlertBanner: isError,
+      showProgressBars: isRefetching,
+    },
   });
 
   return (
@@ -135,11 +171,11 @@ const TableSection = () => {
       <Typography
         variant="h5"
         gutterBottom
-        sx={{ color: "#4466aa", marginBottom: "5px" }}
+        sx={{ color: "#1976d2", marginBottom: "5px" }}
       >
         Отчеты
       </Typography>
-      <MaterialReactTable table={table}  />
+      <MaterialReactTable table={table} />
     </Box>
   );
 };

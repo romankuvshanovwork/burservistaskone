@@ -1,4 +1,4 @@
 export interface IProject {
-    projectId: string;
-    projectName: string;
-  }
+  projectId: string;
+  projectName: string;
+}
