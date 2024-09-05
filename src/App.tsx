@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
-import Header from "./components/Header/Header";
 import "./App.css";
 import OilWells from "./components/OilWells/OilWells";
 import TableSection from "./components/TableSection/TableSection";
 import { Route, Routes } from "react-router-dom";
+import Layout from "./components/Layout/Layout";
 
 function App() {
-  // TODO: Поменять wellId на currentWellId
   const [currentWellId, setCurrentWellId] = useState(0); // Текущая выбранная скважина
   const [isGenPlanFilterOn, setIsGenPlanFilterOn] = useState(false); // Включен ли фильтр по ген. плану
   const [eventFilters, setEventFilters] = useState<String[]>([]); // Массив с фильтрами: БУР, ОСВ, ABN
@@ -17,15 +16,12 @@ function App() {
   }, [currentWellId]);
 
   return (
-    <>
-      <Routes>
-        {/* TODO: Избавиться от дубляжа Header */}
-        <Route path="/" element={<Header />} />
+    <Routes>
+      <Route path="/" element={<Layout />}>
         <Route
-          path="/projectId/:projectId"
+          path="projectId/:projectId"
           element={
             <>
-              <Header />
               <OilWells
                 currentWellId={currentWellId}
                 onCurrentWellIdChange={setCurrentWellId}
@@ -41,8 +37,8 @@ function App() {
             </>
           }
         />
-      </Routes>
-    </>
+      </Route>
+    </Routes>
   );
 }
 
