@@ -26,8 +26,12 @@ export default function OilWells({
   eventFilters: String[];
 }) {
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(calculateRowsPerPage(window.innerWidth));
+  const [rowsPerPage, setRowsPerPage] = useState(
+    calculateRowsPerPage(window.innerWidth)
+  );
   const [calendarDate, setCalendarDate] = useState<Dayjs | null>(dayjs());
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const [wellsWithSiteData, setWellsWithSiteData] = useState<any[]>([]);
 
@@ -78,6 +82,11 @@ export default function OilWells({
           setWellsWithSiteData([]);
           onCurrentWellIdChange(0);
         }
+        setLoading(false);
+      })
+      .catch((error) => {
+        setError(error);
+        setLoading(false);
       });
   }, [projectId]);
 
@@ -108,7 +117,16 @@ export default function OilWells({
           {projectName}
         </Typography>
 
-        {wellsWithSiteData.length > 0 ? (
+        {loading ? (
+          <Typography variant="body1" gutterBottom>
+            Загрузка... Пожалуйста, подождите.
+          </Typography>
+        ) : error ? (
+          <Typography variant="body1" gutterBottom>
+            Произошла сетевая ошибка. Пожалуйста, проверьте сетевое соединение.
+            Или повторите попытку позднее.
+          </Typography>
+        ) : wellsWithSiteData.length > 0 ? (
           <>
             <Box sx={{ overflowY: "hidden", overflowX: "hidden" }}>
               <Box sx={{ display: "flex", gap: "25px" }}>
