@@ -12,12 +12,20 @@ function App() {
 
   return (
     <>
-      <Header />
       <Routes>
+        <Route
+          path="/"
+          element={
+            <>
+              <Header />
+            </>
+          }
+        />
         <Route
           path="/projectId/:projectId"
           element={
             <>
+              <Header />
               <OilWells
                 wellId={wellId}
                 onWellIdChange={setWellId}
