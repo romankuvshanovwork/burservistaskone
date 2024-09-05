@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Header from "./components/Header/Header";
 import "./App.css";
 import OilWells from "./components/OilWells/OilWells";
@@ -9,6 +9,11 @@ function App() {
   const [wellId, setWellId] = React.useState(0); // Текущая выбранная скважина
   const [isGenPlanFilterOn, setIsGenPlanFilterOn] = React.useState(false); // Включен ли фильтр по ген. плану
   const [eventFilters, setEventFilters] = React.useState<String[]>([]); // Массив с фильтрами
+
+  useEffect(() => {
+    setEventFilters([]);
+    setIsGenPlanFilterOn(false);
+  }, [wellId]);
 
   return (
     <>
