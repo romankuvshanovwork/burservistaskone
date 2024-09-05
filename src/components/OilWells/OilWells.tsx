@@ -4,7 +4,7 @@ import Typography from "@mui/material/Typography";
 import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from 'dayjs';
 import OilWellCard from "../OilWellCard/OilWellCard";
 import TablePagination from "@mui/material/TablePagination/TablePagination";
 import { useEffect, useState } from "react";
@@ -27,10 +27,10 @@ export default function OilWells({
 }) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(3);
+  const [calendarDate, setCalendarDate] = React.useState<Dayjs | null>(dayjs());
+  // TODO: Исправить React.useState на useState во всем проекте
 
-  const [wellsWithSiteData, setWellsWithSiteData] = useState<any[]>(
-    []
-  );
+  const [wellsWithSiteData, setWellsWithSiteData] = useState<any[]>([]);
 
   const routeParams = useParams();
   const location = useLocation();
@@ -77,6 +77,20 @@ export default function OilWells({
         }
       });
   }, [routeParams?.projectId]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      const width = window.innerWidth;
+      const nextRowsPerPage = width >= 600 ? Math.round((width - 380) / 300) : 1;
+      setRowsPerPage(nextRowsPerPage);
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   return (
     <Box
@@ -141,7 +155,8 @@ export default function OilWells({
             flexShrink: 0,
             display: { xs: "none", sm: "block" },
           }}
-          defaultValue={dayjs()}
+          value={calendarDate}
+          onChange={(newValue) => setCalendarDate(newValue)}
         />
       </LocalizationProvider>
     </Box>
