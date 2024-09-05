@@ -8,13 +8,7 @@ import {
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { IReport } from "../../interfaces/IReport";
-
-const reports = [
-  { type: "Суточный", alias: "DDR" },
-  { type: "Крепление", alias: "CASING" },
-  { type: "Цнементирование", alias: "GEN_CMT" },
-  { type: "Планирование", alias: "GEN_PLAN" },
-];
+import { reports } from "../../constants/reports";
 
 const TableSection = ({
   currentWellId,
@@ -25,14 +19,14 @@ const TableSection = ({
   isGenPlanFilterOn?: boolean;
   eventFilters: String[];
 }) => {
-  //data and fetching state
+  // Data and fetching state
   const [data, setData] = useState<IReport[]>([]);
   const [isError, setIsError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isRefetching, setIsRefetching] = useState(false);
   const [rowCount, setRowCount] = useState(0);
 
-  //table state
+  // Table state
   const [columnFilters, setColumnFilters] = useState<MRT_ColumnFiltersState>(
     []
   );
