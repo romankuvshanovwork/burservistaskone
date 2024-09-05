@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import "./App.css";
 import OilWells from "./components/OilWells/OilWells";
 import TableSection from "./components/TableSection/TableSection";
@@ -9,11 +9,6 @@ function App() {
   const [currentWellId, setCurrentWellId] = useState(0); // Текущая выбранная скважина
   const [isGenPlanFilterOn, setIsGenPlanFilterOn] = useState(false); // Включен ли фильтр по ген. плану
   const [eventFilters, setEventFilters] = useState<String[]>([]); // Массив с фильтрами: БУР, ОСВ, ABN
-
-  useEffect(() => {
-    setEventFilters([]);
-    setIsGenPlanFilterOn(false);
-  }, [currentWellId]);
 
   return (
     <Routes>

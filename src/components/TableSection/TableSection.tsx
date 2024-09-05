@@ -131,7 +131,8 @@ const TableSection = ({
     data,
     enableRowSelection: false,
     enableColumnActions: false,
-    enableTopToolbar: false,
+    enableTopToolbar: true,
+    enableToolbarInternalActions: false,
     enablePagination: false,
     enableBottomToolbar: false,
     enableColumnResizing: true,
@@ -147,6 +148,14 @@ const TableSection = ({
         },
       ],
       showColumnFilters: true,
+    },
+    positionToolbarDropZone: 'none',
+    muiTopToolbarProps: {
+      sx: {
+        margin: '0',
+        padding: '0',
+        minHeight: '5px',
+      },
     },
     muiToolbarAlertBannerProps: isError
       ? {

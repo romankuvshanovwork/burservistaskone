@@ -104,7 +104,12 @@ export default function OilWellCard({
                   }
                   sx={{ paddingX: "10px", cursor: "pointer" }}
                   onClick={() => {
+                    
                     let nextCurrentFilters = [...eventFilters];
+                    if (currentWellId !== wellWithSiteData?.wellId) {
+                      nextCurrentFilters = [];
+                      onIsGenPlanFilterOnChange(false);
+                    }
                     if (nextCurrentFilters.includes(uniqueEvent)) {
                       nextCurrentFilters.splice(
                         nextCurrentFilters.indexOf(uniqueEvent),
@@ -126,6 +131,9 @@ export default function OilWellCard({
               variant="text"
               sx={{ fontWeight: "bold" }}
               onClick={() => {
+                if (currentWellId !== wellWithSiteData?.wellId) {
+                  onEventFiltersChange([]);
+                }
                 onCurrentWellIdChange(wellWithSiteData?.wellId);
                 onIsGenPlanFilterOnChange(true);
               }}
