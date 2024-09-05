@@ -11,28 +11,30 @@ function App() {
   const [eventFilters, setEventFilters] = React.useState([]); // Массив с фильтрами
 
   return (
-    <Routes>
-      <Route
-        path="/projectId/:projectId"
-        element={
-          <>
-            <Header />
-            <OilWells
-              wellId={wellId}
-              onWellIdChange={setWellId}
-              onIsGenPlanFilterOnChange={setIsGenPlanFilterOn}
-              eventFilters={eventFilters}
-              onEventFiltersChange={setEventFilters}
-            />
-            <TableSection
-              wellId={wellId}
-              isGenPlanFilterOn={isGenPlanFilterOn}
-              eventFilters={eventFilters}
-            />
-          </>
-        }
-      />
-    </Routes>
+    <>
+      <Header />
+      <Routes>
+        <Route
+          path="/projectId/:projectId"
+          element={
+            <>
+              <OilWells
+                wellId={wellId}
+                onWellIdChange={setWellId}
+                onIsGenPlanFilterOnChange={setIsGenPlanFilterOn}
+                eventFilters={eventFilters}
+                onEventFiltersChange={setEventFilters}
+              />
+              <TableSection
+                wellId={wellId}
+                isGenPlanFilterOn={isGenPlanFilterOn}
+                eventFilters={eventFilters}
+              />
+            </>
+          }
+        />
+      </Routes>
+    </>
   );
 }
 

@@ -28,7 +28,7 @@ export default function OilWells({
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(3);
 
-  const [wellsWithSiteData, setWellsWithSiteData] = useState<(IWell & ISite)[]>(
+  const [wellsWithSiteData, setWellsWithSiteData] = useState<any[]>(
     []
   );
 
@@ -53,7 +53,7 @@ export default function OilWells({
         return res.json();
       })
       .then((sites) => {
-        const allSites = sites.map((site: any) => site?.siteId).join();
+        const allSites = sites.map((site: ISite) => site?.siteId).join();
 
         if (allSites) {
           fetch(
