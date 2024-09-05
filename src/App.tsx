@@ -1,46 +1,39 @@
-import React, { useEffect } from "react";
-import Header from "./components/Header/Header";
+import { useState } from "react";
 import "./App.css";
 import OilWells from "./components/OilWells/OilWells";
 import TableSection from "./components/TableSection/TableSection";
 import { Route, Routes } from "react-router-dom";
+import Layout from "./components/Layout/Layout";
 
 function App() {
-  const [wellId, setWellId] = React.useState(0); // Текущая выбранная скважина
-  const [isGenPlanFilterOn, setIsGenPlanFilterOn] = React.useState(false); // Включен ли фильтр по ген. плану
-  const [eventFilters, setEventFilters] = React.useState<String[]>([]); // Массив с фильтрами
-
-  useEffect(() => {
-    setEventFilters([]);
-    setIsGenPlanFilterOn(false);
-  }, [wellId]);
+  const [currentWellId, setCurrentWellId] = useState(0); // Текущая выбранная скважина
+  const [isGenPlanFilterOn, setIsGenPlanFilterOn] = useState(false); // Включен ли фильтр по ген. плану
+  const [eventFilters, setEventFilters] = useState<String[]>([]); // Массив с фильтрами: БУР, ОСВ, ABN
 
   return (
-    <>
-      <Routes>
-        <Route path="/" element={<Header />} />
+    <Routes>
+      <Route path="/" element={<Layout />}>
         <Route
-          path="/projectId/:projectId"
+          path="projectId/:projectId"
           element={
             <>
-              <Header />
               <OilWells
-                wellId={wellId}
-                onWellIdChange={setWellId}
+                currentWellId={currentWellId}
+                onCurrentWellIdChange={setCurrentWellId}
                 onIsGenPlanFilterOnChange={setIsGenPlanFilterOn}
                 eventFilters={eventFilters}
                 onEventFiltersChange={setEventFilters}
               />
               <TableSection
-                wellId={wellId}
+                currentWellId={currentWellId}
                 isGenPlanFilterOn={isGenPlanFilterOn}
                 eventFilters={eventFilters}
               />
             </>
           }
         />
-      </Routes>
-    </>
+      </Route>
+    </Routes>
   );
 }
 

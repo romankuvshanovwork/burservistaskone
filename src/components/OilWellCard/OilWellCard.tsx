@@ -11,15 +11,15 @@ import { IEvent } from "../../interfaces/IEvent";
 
 export default function OilWellCard({
   wellWithSiteData,
-  onWellIdChange,
-  wellId,
+  onCurrentWellIdChange,
+  currentWellId,
   onIsGenPlanFilterOnChange,
   eventFilters,
   onEventFiltersChange,
 }: {
   wellWithSiteData: any;
-  onWellIdChange: Function;
-  wellId: number;
+  onCurrentWellIdChange: Function;
+  currentWellId: number;
   onIsGenPlanFilterOnChange: Function;
   eventFilters: String[];
   onEventFiltersChange: Function;
@@ -35,9 +35,39 @@ export default function OilWellCard({
     }
   );
 
+  function resetAllFilters() {
+    onCurrentWellIdChange(wellWithSiteData?.wellId);
+    onIsGenPlanFilterOnChange(false);
+    onEventFiltersChange([]);
+  }
+
+  function activateGenPlanFilter() {
+    if (currentWellId !== wellWithSiteData?.wellId) {
+      onEventFiltersChange([]);
+      onCurrentWellIdChange(wellWithSiteData?.wellId);
+    }
+    onIsGenPlanFilterOnChange(true);
+  }
+
+  function activateTypeFilter(uniqueEvent: string) {
+    let nextCurrentFilters = [...eventFilters];
+    if (currentWellId !== wellWithSiteData?.wellId) {
+      nextCurrentFilters = [];
+      onIsGenPlanFilterOnChange(false);
+    }
+    if (nextCurrentFilters.includes(uniqueEvent)) {
+      nextCurrentFilters.splice(nextCurrentFilters.indexOf(uniqueEvent), 1);
+    } else {
+      nextCurrentFilters.push(uniqueEvent);
+    }
+
+    onCurrentWellIdChange(wellWithSiteData?.wellId);
+    onEventFiltersChange(nextCurrentFilters);
+  }
+
   useEffect(() => {
     fetch(
-      `https://edmrest.emeryone.com/Universal/DmEventT/wellId/${wellId}/?fields=wellId,eventId,eventCode`
+      `https://edmrest.emeryone.com/Universal/DmEventT/wellId/${currentWellId}/?fields=wellId,eventId,eventCode`
     )
       .then((res) => {
         return res.json();
@@ -55,7 +85,9 @@ export default function OilWellCard({
       <Card
         sx={{
           border:
-            wellId === wellWithSiteData?.wellId ? "1px solid #1976d2" : "",
+            currentWellId === wellWithSiteData?.wellId
+              ? "1px solid #1976d2"
+              : "",
         }}
         variant="outlined"
       >
@@ -70,7 +102,7 @@ export default function OilWellCard({
             <Typography
               variant="h5"
               component="div"
-              onClick={() => onWellIdChange(wellWithSiteData?.wellId)}
+              onClick={() => onCurrentWellIdChange(wellWithSiteData?.wellId)}
               sx={{
                 cursor: "pointer",
                 display: "inline-block",
@@ -98,25 +130,12 @@ export default function OilWellCard({
                   color="primary"
                   variant={
                     eventFilters.includes(uniqueEvent) &&
-                    wellId === wellWithSiteData?.wellId
+                    currentWellId === wellWithSiteData?.wellId
                       ? "filled"
                       : "outlined"
                   }
                   sx={{ paddingX: "10px", cursor: "pointer" }}
-                  onClick={() => {
-                    let nextCurrentFilters = [...eventFilters];
-                    if (nextCurrentFilters.includes(uniqueEvent)) {
-                      nextCurrentFilters.splice(
-                        nextCurrentFilters.indexOf(uniqueEvent),
-                        1
-                      );
-                    } else {
-                      nextCurrentFilters.push(uniqueEvent);
-                    }
-
-                    onWellIdChange(wellWithSiteData?.wellId);
-                    onEventFiltersChange(nextCurrentFilters);
-                  }}
+                  onClick={() => activateTypeFilter(uniqueEvent)}
                 />
               ))}
             </Box>
@@ -125,21 +144,14 @@ export default function OilWellCard({
             <Button
               variant="text"
               sx={{ fontWeight: "bold" }}
-              onClick={() => {
-                onWellIdChange(wellWithSiteData?.wellId);
-                onIsGenPlanFilterOnChange(true);
-              }}
+              onClick={() => activateGenPlanFilter()}
             >
               План
             </Button>
             <Button
               variant="text"
               sx={{ fontWeight: "bold" }}
-              onClick={() => {
-                onWellIdChange(wellWithSiteData?.wellId);
-                onIsGenPlanFilterOnChange(false);
-                onEventFiltersChange([]);
-              }}
+              onClick={() => resetAllFilters()}
             >
               Все отчеты
             </Button>

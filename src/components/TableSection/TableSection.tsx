@@ -8,31 +8,25 @@ import {
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { IReport } from "../../interfaces/IReport";
-
-const reports = [
-  { type: "Суточный", alias: "DDR" },
-  { type: "Крепление", alias: "CASING" },
-  { type: "Цнементирование", alias: "GEN_CMT" },
-  { type: "Планирование", alias: "GEN_PLAN" },
-];
+import { reports } from "../../constants/reports";
 
 const TableSection = ({
-  wellId,
+  currentWellId,
   isGenPlanFilterOn,
   eventFilters,
 }: {
-  wellId: number;
+  currentWellId: number;
   isGenPlanFilterOn?: boolean;
   eventFilters: String[];
 }) => {
-  //data and fetching state
+  // Data and fetching state
   const [data, setData] = useState<IReport[]>([]);
   const [isError, setIsError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isRefetching, setIsRefetching] = useState(false);
   const [rowCount, setRowCount] = useState(0);
 
-  //table state
+  // Table state
   const [columnFilters, setColumnFilters] = useState<MRT_ColumnFiltersState>(
     []
   );
@@ -62,7 +56,7 @@ const TableSection = ({
 
       try {
         const response = await fetch(
-          `https://edmrest.emeryone.com/Universal/DmReportJournal/wellId/${wellId}/?fields=eventCode,reportJournalId,wellId,wellboreId,dateReport,eventId,reportAlias,description,entityType,reportNo`
+          `https://edmrest.emeryone.com/Universal/DmReportJournal/wellId/${currentWellId}/?fields=eventCode,reportJournalId,wellId,wellboreId,dateReport,eventId,reportAlias,description,entityType,reportNo`
         );
         const json = (await response.json()) as IReport[];
         setData(json);
@@ -78,7 +72,7 @@ const TableSection = ({
     };
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [columnFilters, globalFilter, wellId]);
+  }, [columnFilters, globalFilter, currentWellId]);
 
   const columns = useMemo<MRT_ColumnDef<IReport>[]>(
     () => [
@@ -131,7 +125,8 @@ const TableSection = ({
     data,
     enableRowSelection: false,
     enableColumnActions: false,
-    enableTopToolbar: false,
+    enableTopToolbar: true,
+    enableToolbarInternalActions: false,
     enablePagination: false,
     enableBottomToolbar: false,
     enableColumnResizing: true,
@@ -147,6 +142,12 @@ const TableSection = ({
         },
       ],
       showColumnFilters: true,
+    },
+    positionToolbarDropZone: "none",
+    muiTopToolbarProps: {
+      sx: {
+        minHeight: "5px",
+      },
     },
     muiToolbarAlertBannerProps: isError
       ? {

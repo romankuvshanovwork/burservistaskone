@@ -4,7 +4,7 @@ import Typography from "@mui/material/Typography";
 import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import OilWellCard from "../OilWellCard/OilWellCard";
 import TablePagination from "@mui/material/TablePagination/TablePagination";
 import { useEffect, useState } from "react";
@@ -13,24 +13,27 @@ import { IWell } from "../../interfaces/IWell";
 import { ISite } from "../../interfaces/ISite";
 
 export default function OilWells({
-  wellId,
-  onWellIdChange,
+  currentWellId,
+  onCurrentWellIdChange,
   onIsGenPlanFilterOnChange,
   onEventFiltersChange,
   eventFilters,
 }: {
-  wellId: number;
-  onWellIdChange: Function;
+  currentWellId: number;
+  onCurrentWellIdChange: Function;
   onIsGenPlanFilterOnChange: Function;
   onEventFiltersChange: Function;
   eventFilters: String[];
 }) {
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(3);
-
-  const [wellsWithSiteData, setWellsWithSiteData] = useState<any[]>(
-    []
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(
+    calculateRowsPerPage(window.innerWidth)
   );
+  const [calendarDate, setCalendarDate] = useState<Dayjs | null>(dayjs());
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const [wellsWithSiteData, setWellsWithSiteData] = useState<any[]>([]);
 
   const routeParams = useParams();
   const location = useLocation();
@@ -44,6 +47,10 @@ export default function OilWells({
   ) => {
     setPage(newPage);
   };
+
+  function calculateRowsPerPage(width: number) {
+    return width >= 600 ? Math.round((width - 380) / 300) : 1;
+  }
 
   useEffect(() => {
     fetch(
@@ -63,7 +70,7 @@ export default function OilWells({
               return res.json();
             })
             .then((wells) => {
-              onWellIdChange(wells[0]?.wellId);
+              onCurrentWellIdChange(wells[0]?.wellId);
               setWellsWithSiteData(
                 wells.map((well: IWell) => ({
                   ...well,
@@ -73,10 +80,28 @@ export default function OilWells({
             });
         } else {
           setWellsWithSiteData([]);
-          onWellIdChange(0);
+          onCurrentWellIdChange(0);
         }
+        setLoading(false);
+      })
+      .catch((error) => {
+        setError(error);
+        setLoading(false);
       });
-  }, [routeParams?.projectId]);
+  }, [projectId]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      const width = window.innerWidth;
+      const nextRowsPerPage = calculateRowsPerPage(width);
+      setRowsPerPage(nextRowsPerPage);
+    };
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   return (
     <Box
@@ -92,7 +117,16 @@ export default function OilWells({
           {projectName}
         </Typography>
 
-        {wellsWithSiteData.length > 0 ? (
+        {loading ? (
+          <Typography variant="body1" gutterBottom>
+            Загрузка... Пожалуйста, подождите.
+          </Typography>
+        ) : error ? (
+          <Typography variant="body1" gutterBottom>
+            Произошла сетевая ошибка. Пожалуйста, проверьте сетевое соединение.
+            Или повторите попытку позднее.
+          </Typography>
+        ) : wellsWithSiteData.length > 0 ? (
           <>
             <Box sx={{ overflowY: "hidden", overflowX: "hidden" }}>
               <Box sx={{ display: "flex", gap: "25px" }}>
@@ -104,8 +138,8 @@ export default function OilWells({
                         wellWithSiteData?.siteId +
                         wellWithSiteData?.wellId
                       }
-                      wellId={wellId}
-                      onWellIdChange={onWellIdChange}
+                      currentWellId={currentWellId}
+                      onCurrentWellIdChange={onCurrentWellIdChange}
                       wellWithSiteData={wellWithSiteData}
                       onIsGenPlanFilterOnChange={onIsGenPlanFilterOnChange}
                       eventFilters={eventFilters}
@@ -141,7 +175,8 @@ export default function OilWells({
             flexShrink: 0,
             display: { xs: "none", sm: "block" },
           }}
-          defaultValue={dayjs()}
+          value={calendarDate}
+          onChange={(newValue) => setCalendarDate(newValue)}
         />
       </LocalizationProvider>
     </Box>
