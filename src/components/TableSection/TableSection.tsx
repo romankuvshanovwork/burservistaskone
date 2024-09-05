@@ -143,12 +143,10 @@ const TableSection = ({
       ],
       showColumnFilters: true,
     },
-    positionToolbarDropZone: 'none',
+    positionToolbarDropZone: "none",
     muiTopToolbarProps: {
       sx: {
-        margin: '0',
-        padding: '0',
-        minHeight: '5px',
+        minHeight: "5px",
       },
     },
     muiToolbarAlertBannerProps: isError

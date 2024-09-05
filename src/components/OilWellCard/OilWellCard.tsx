@@ -35,6 +35,36 @@ export default function OilWellCard({
     }
   );
 
+  function resetAllFilters() {
+    onCurrentWellIdChange(wellWithSiteData?.wellId);
+    onIsGenPlanFilterOnChange(false);
+    onEventFiltersChange([]);
+  }
+
+  function activateGenPlanFilter() {
+    if (currentWellId !== wellWithSiteData?.wellId) {
+      onEventFiltersChange([]);
+      onCurrentWellIdChange(wellWithSiteData?.wellId);
+    }
+    onIsGenPlanFilterOnChange(true);
+  }
+
+  function activateTypeFilter(uniqueEvent: string) {
+    let nextCurrentFilters = [...eventFilters];
+    if (currentWellId !== wellWithSiteData?.wellId) {
+      nextCurrentFilters = [];
+      onIsGenPlanFilterOnChange(false);
+    }
+    if (nextCurrentFilters.includes(uniqueEvent)) {
+      nextCurrentFilters.splice(nextCurrentFilters.indexOf(uniqueEvent), 1);
+    } else {
+      nextCurrentFilters.push(uniqueEvent);
+    }
+
+    onCurrentWellIdChange(wellWithSiteData?.wellId);
+    onEventFiltersChange(nextCurrentFilters);
+  }
+
   useEffect(() => {
     fetch(
       `https://edmrest.emeryone.com/Universal/DmEventT/wellId/${currentWellId}/?fields=wellId,eventId,eventCode`
@@ -55,7 +85,9 @@ export default function OilWellCard({
       <Card
         sx={{
           border:
-          currentWellId === wellWithSiteData?.wellId ? "1px solid #1976d2" : "",
+            currentWellId === wellWithSiteData?.wellId
+              ? "1px solid #1976d2"
+              : "",
         }}
         variant="outlined"
       >
@@ -103,25 +135,7 @@ export default function OilWellCard({
                       : "outlined"
                   }
                   sx={{ paddingX: "10px", cursor: "pointer" }}
-                  onClick={() => {
-                    
-                    let nextCurrentFilters = [...eventFilters];
-                    if (currentWellId !== wellWithSiteData?.wellId) {
-                      nextCurrentFilters = [];
-                      onIsGenPlanFilterOnChange(false);
-                    }
-                    if (nextCurrentFilters.includes(uniqueEvent)) {
-                      nextCurrentFilters.splice(
-                        nextCurrentFilters.indexOf(uniqueEvent),
-                        1
-                      );
-                    } else {
-                      nextCurrentFilters.push(uniqueEvent);
-                    }
-
-                    onCurrentWellIdChange(wellWithSiteData?.wellId);
-                    onEventFiltersChange(nextCurrentFilters);
-                  }}
+                  onClick={() => activateTypeFilter(uniqueEvent)}
                 />
               ))}
             </Box>
@@ -130,24 +144,14 @@ export default function OilWellCard({
             <Button
               variant="text"
               sx={{ fontWeight: "bold" }}
-              onClick={() => {
-                if (currentWellId !== wellWithSiteData?.wellId) {
-                  onEventFiltersChange([]);
-                }
-                onCurrentWellIdChange(wellWithSiteData?.wellId);
-                onIsGenPlanFilterOnChange(true);
-              }}
+              onClick={() => activateGenPlanFilter()}
             >
               План
             </Button>
             <Button
               variant="text"
               sx={{ fontWeight: "bold" }}
-              onClick={() => {
-                onCurrentWellIdChange(wellWithSiteData?.wellId);
-                onIsGenPlanFilterOnChange(false);
-                onEventFiltersChange([]);
-              }}
+              onClick={() => resetAllFilters()}
             >
               Все отчеты
             </Button>
