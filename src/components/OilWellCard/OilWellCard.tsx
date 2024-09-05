@@ -48,7 +48,7 @@ export default function OilWellCard({
           .filter((x: any, i: any, a: any) => a.indexOf(x) === i);
         setUniqueEvents(uniqueEvents);
       });
-  }, []);
+  });
 
   return (
     <Box sx={{ minWidth: 275 }}>

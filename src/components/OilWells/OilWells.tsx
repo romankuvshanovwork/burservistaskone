@@ -4,7 +4,7 @@ import Typography from "@mui/material/Typography";
 import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import dayjs, { Dayjs } from 'dayjs';
+import dayjs, { Dayjs } from "dayjs";
 import OilWellCard from "../OilWellCard/OilWellCard";
 import TablePagination from "@mui/material/TablePagination/TablePagination";
 import { useEffect, useState } from "react";
@@ -25,10 +25,9 @@ export default function OilWells({
   onEventFiltersChange: Function;
   eventFilters: String[];
 }) {
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(3);
-  const [calendarDate, setCalendarDate] = React.useState<Dayjs | null>(dayjs());
-  // TODO: Исправить React.useState на useState во всем проекте
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(calculateRowsPerPage(window.innerWidth));
+  const [calendarDate, setCalendarDate] = useState<Dayjs | null>(dayjs());
 
   const [wellsWithSiteData, setWellsWithSiteData] = useState<any[]>([]);
 
@@ -44,6 +43,10 @@ export default function OilWells({
   ) => {
     setPage(newPage);
   };
+
+  function calculateRowsPerPage(width: number) {
+    return width >= 600 ? Math.round((width - 380) / 300) : 1;
+  }
 
   useEffect(() => {
     fetch(
@@ -81,10 +84,9 @@ export default function OilWells({
   useEffect(() => {
     const handleResize = () => {
       const width = window.innerWidth;
-      const nextRowsPerPage = width >= 600 ? Math.round((width - 380) / 300) : 1;
+      const nextRowsPerPage = calculateRowsPerPage(width);
       setRowsPerPage(nextRowsPerPage);
     };
-
     window.addEventListener("resize", handleResize);
 
     return () => {

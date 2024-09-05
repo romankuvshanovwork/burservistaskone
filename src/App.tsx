@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Header from "./components/Header/Header";
 import "./App.css";
 import OilWells from "./components/OilWells/OilWells";
@@ -6,9 +6,10 @@ import TableSection from "./components/TableSection/TableSection";
 import { Route, Routes } from "react-router-dom";
 
 function App() {
-  const [wellId, setWellId] = React.useState(0); // Текущая выбранная скважина
-  const [isGenPlanFilterOn, setIsGenPlanFilterOn] = React.useState(false); // Включен ли фильтр по ген. плану
-  const [eventFilters, setEventFilters] = React.useState<String[]>([]); // Массив с фильтрами
+  // TODO: Поменять wellId на currentWellId
+  const [wellId, setWellId] = useState(0); // Текущая выбранная скважина
+  const [isGenPlanFilterOn, setIsGenPlanFilterOn] = useState(false); // Включен ли фильтр по ген. плану
+  const [eventFilters, setEventFilters] = useState<String[]>([]); // Массив с фильтрами: БУР, ОСВ, ABN
 
   useEffect(() => {
     setEventFilters([]);
@@ -18,6 +19,7 @@ function App() {
   return (
     <>
       <Routes>
+        {/* TODO: Избавиться от дубляжа Header */}
         <Route path="/" element={<Header />} />
         <Route
           path="/projectId/:projectId"

@@ -74,7 +74,7 @@ export default function Header() {
           });
       })
       .catch(() => {});
-  }, []);
+  },);
 
   return (
     <Box sx={{ flexGrow: 1 }}>
