@@ -21,7 +21,7 @@ export default function OilWellCard({
   onWellIdChange: Function;
   wellId: number;
   onIsGenPlanFilterOnChange: Function;
-  eventFilters: any;
+  eventFilters: String[];
   onEventFiltersChange: Function;
 }) {
   const [uniqueEvents, setUniqueEvents] = useState([]);

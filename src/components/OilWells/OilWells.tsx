@@ -23,7 +23,7 @@ export default function OilWells({
   onWellIdChange: Function;
   onIsGenPlanFilterOnChange: Function;
   onEventFiltersChange: Function;
-  eventFilters: any;
+  eventFilters: String[];
 }) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(3);
@@ -65,9 +65,9 @@ export default function OilWells({
             .then((wells) => {
               onWellIdChange(wells[0]?.wellId);
               setWellsWithSiteData(
-                wells.map((well: any) => ({
+                wells.map((well: IWell) => ({
                   ...well,
-                  ...sites.find((site: any) => site.siteId === well.siteId),
+                  ...sites.find((site: ISite) => site.siteId === well.siteId),
                 }))
               );
             });

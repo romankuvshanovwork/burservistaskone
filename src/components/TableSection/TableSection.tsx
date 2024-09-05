@@ -23,7 +23,7 @@ const TableSection = ({
 }: {
   wellId: number;
   isGenPlanFilterOn?: boolean;
-  eventFilters: any;
+  eventFilters: String[];
 }) => {
   //data and fetching state
   const [data, setData] = useState<IReport[]>([]);

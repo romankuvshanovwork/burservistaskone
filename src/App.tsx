@@ -8,19 +8,12 @@ import { Route, Routes } from "react-router-dom";
 function App() {
   const [wellId, setWellId] = React.useState(0); // Текущая выбранная скважина
   const [isGenPlanFilterOn, setIsGenPlanFilterOn] = React.useState(false); // Включен ли фильтр по ген. плану
-  const [eventFilters, setEventFilters] = React.useState([]); // Массив с фильтрами
+  const [eventFilters, setEventFilters] = React.useState<String[]>([]); // Массив с фильтрами
 
   return (
     <>
       <Routes>
-        <Route
-          path="/"
-          element={
-            <>
-              <Header />
-            </>
-          }
-        />
+        <Route path="/" element={<Header />} />
         <Route
           path="/projectId/:projectId"
           element={
