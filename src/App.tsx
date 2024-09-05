@@ -7,14 +7,14 @@ import { Route, Routes } from "react-router-dom";
 
 function App() {
   // TODO: Поменять wellId на currentWellId
-  const [wellId, setWellId] = useState(0); // Текущая выбранная скважина
+  const [currentWellId, setCurrentWellId] = useState(0); // Текущая выбранная скважина
   const [isGenPlanFilterOn, setIsGenPlanFilterOn] = useState(false); // Включен ли фильтр по ген. плану
   const [eventFilters, setEventFilters] = useState<String[]>([]); // Массив с фильтрами: БУР, ОСВ, ABN
 
   useEffect(() => {
     setEventFilters([]);
     setIsGenPlanFilterOn(false);
-  }, [wellId]);
+  }, [currentWellId]);
 
   return (
     <>
@@ -27,14 +27,14 @@ function App() {
             <>
               <Header />
               <OilWells
-                wellId={wellId}
-                onWellIdChange={setWellId}
+                currentWellId={currentWellId}
+                onCurrentWellIdChange={setCurrentWellId}
                 onIsGenPlanFilterOnChange={setIsGenPlanFilterOn}
                 eventFilters={eventFilters}
                 onEventFiltersChange={setEventFilters}
               />
               <TableSection
-                wellId={wellId}
+                currentWellId={currentWellId}
                 isGenPlanFilterOn={isGenPlanFilterOn}
                 eventFilters={eventFilters}
               />

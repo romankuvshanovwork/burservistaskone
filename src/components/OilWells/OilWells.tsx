@@ -13,14 +13,14 @@ import { IWell } from "../../interfaces/IWell";
 import { ISite } from "../../interfaces/ISite";
 
 export default function OilWells({
-  wellId,
-  onWellIdChange,
+  currentWellId,
+  onCurrentWellIdChange,
   onIsGenPlanFilterOnChange,
   onEventFiltersChange,
   eventFilters,
 }: {
-  wellId: number;
-  onWellIdChange: Function;
+  currentWellId: number;
+  onCurrentWellIdChange: Function;
   onIsGenPlanFilterOnChange: Function;
   onEventFiltersChange: Function;
   eventFilters: String[];
@@ -66,7 +66,7 @@ export default function OilWells({
               return res.json();
             })
             .then((wells) => {
-              onWellIdChange(wells[0]?.wellId);
+              onCurrentWellIdChange(wells[0]?.wellId);
               setWellsWithSiteData(
                 wells.map((well: IWell) => ({
                   ...well,
@@ -76,10 +76,10 @@ export default function OilWells({
             });
         } else {
           setWellsWithSiteData([]);
-          onWellIdChange(0);
+          onCurrentWellIdChange(0);
         }
       });
-  }, [routeParams?.projectId]);
+  }, [projectId]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -120,8 +120,8 @@ export default function OilWells({
                         wellWithSiteData?.siteId +
                         wellWithSiteData?.wellId
                       }
-                      wellId={wellId}
-                      onWellIdChange={onWellIdChange}
+                      currentWellId={currentWellId}
+                      onCurrentWellIdChange={onCurrentWellIdChange}
                       wellWithSiteData={wellWithSiteData}
                       onIsGenPlanFilterOnChange={onIsGenPlanFilterOnChange}
                       eventFilters={eventFilters}

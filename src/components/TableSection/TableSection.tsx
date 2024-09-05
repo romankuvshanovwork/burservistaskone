@@ -17,11 +17,11 @@ const reports = [
 ];
 
 const TableSection = ({
-  wellId,
+  currentWellId,
   isGenPlanFilterOn,
   eventFilters,
 }: {
-  wellId: number;
+  currentWellId: number;
   isGenPlanFilterOn?: boolean;
   eventFilters: String[];
 }) => {
@@ -62,7 +62,7 @@ const TableSection = ({
 
       try {
         const response = await fetch(
-          `https://edmrest.emeryone.com/Universal/DmReportJournal/wellId/${wellId}/?fields=eventCode,reportJournalId,wellId,wellboreId,dateReport,eventId,reportAlias,description,entityType,reportNo`
+          `https://edmrest.emeryone.com/Universal/DmReportJournal/wellId/${currentWellId}/?fields=eventCode,reportJournalId,wellId,wellboreId,dateReport,eventId,reportAlias,description,entityType,reportNo`
         );
         const json = (await response.json()) as IReport[];
         setData(json);
@@ -78,7 +78,7 @@ const TableSection = ({
     };
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [columnFilters, globalFilter, wellId]);
+  }, [columnFilters, globalFilter, currentWellId]);
 
   const columns = useMemo<MRT_ColumnDef<IReport>[]>(
     () => [
