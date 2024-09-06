@@ -24,7 +24,8 @@ export default function OilWellCard({
   eventFilters: String[];
   onEventFiltersChange: Function;
 }) {
-  const [uniqueEvents, setUniqueEvents] = useState([]);
+  const [uniqueEvents, setUniqueEvents] = useState<string[]>([]);
+  const [eventCache, setEventCache] = useState<{ [key: string]: string[] }>({});
 
   const spudDateLocal = new Date(wellWithSiteData?.spudDate).toLocaleDateString(
     "ru-RU",
@@ -66,22 +67,31 @@ export default function OilWellCard({
   }
 
   useEffect(() => {
-    fetch(
-      `https://edmrest.emeryone.com/Universal/DmEventT/wellId/${currentWellId}/?fields=wellId,eventId,eventCode`
-    )
-      .then((res) => {
-        return res.json();
-      })
-      .then((events) => {
-        const uniqueEvents = events
-          ?.map((event: IEvent) => event?.eventCode)
-          .filter((x: any, i: any, a: any) => a.indexOf(x) === i);
-        setUniqueEvents(uniqueEvents);
-      });
-  }, []);
+    if (eventCache[wellWithSiteData?.wellId]) {
+      setUniqueEvents(eventCache[wellWithSiteData?.wellId]);
+    } else {
+      fetch(
+        `https://edmrest.emeryone.com/Universal/DmEventT/wellId/${wellWithSiteData?.wellId}/?fields=wellId,eventId,eventCode`
+      )
+        .then((res) => res.json())
+        .then((events) => {
+          const uniqueEventCodes = events
+            ?.map((event: any) => event?.eventCode)
+            .filter((x: any, i: any, a: any) => a.indexOf(x) === i)
+            ?.filter((event: string) => event);
+          // Cache the data
+          setEventCache((prevCache) => ({
+            ...prevCache,
+            [wellWithSiteData?.wellId]: uniqueEventCodes,
+          }));
+          setUniqueEvents(uniqueEventCodes);
+        })
+        .catch(() => {});
+    }
+  }, [wellWithSiteData?.wellId, eventCache]);
 
   return (
-    <Box sx={{ minWidth: 275 }}>
+    <Box sx={{ minWidth: 275, minHeight: 300 }}>
       <Card
         sx={{
           border:

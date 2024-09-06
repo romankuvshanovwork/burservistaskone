@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { styled, alpha } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -73,8 +73,22 @@ export default function Header() {
             state: { projectName: firstProject?.projectName },
           });
       })
-      .catch(() => {});
+      .catch((error) => {
+        console.error("Error fetching projects:", error);
+      });
   }, []);
+
+  const filteredProjects = useMemo(
+    () =>
+      projects.filter((project) =>
+        serachQuery
+          ? project?.projectName
+              ?.toLowerCase()
+              .includes(serachQuery.toLowerCase())
+          : true
+      ),
+    [projects, serachQuery]
+  );
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -101,14 +115,7 @@ export default function Header() {
                 columnGap: "5px",
               }}
             >
-              {projects
-                .filter((project) =>
-                  serachQuery
-                    ? project?.projectName
-                        ?.toLocaleLowerCase()
-                        ?.includes(serachQuery?.toLocaleLowerCase())
-                    : true
-                )
+              {filteredProjects
                 .map((project) => (
                   <Button
                     component={RouterLink}
