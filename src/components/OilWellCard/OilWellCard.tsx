@@ -7,7 +7,6 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Chip from "@mui/material/Chip/Chip";
 import { useEffect, useState } from "react";
-import { IEvent } from "../../interfaces/IEvent";
 
 export default function OilWellCard({
   wellWithSiteData,
@@ -93,11 +92,13 @@ export default function OilWellCard({
   return (
     <Box sx={{ minWidth: 275 }}>
       <Card
+        onClick={() => onCurrentWellIdChange(wellWithSiteData?.wellId)}
         sx={{
           border:
             currentWellId === wellWithSiteData?.wellId
               ? "1px solid #1976d2"
               : "",
+          cursor: "pointer",
         }}
         variant="outlined"
       >
@@ -105,34 +106,63 @@ export default function OilWellCard({
           <CardContent>
             <Typography
               gutterBottom
-              sx={{ color: "text.secondary", fontSize: 14 }}
+              sx={{
+                display: "inline-block",
+                color: "text.secondary",
+                fontSize: 14,
+                cursor: "text",
+              }}
+              onClick={(event) => event.stopPropagation()}
             >
               Куст: {wellWithSiteData?.siteName}
             </Typography>
+            <br></br>
             <Typography
               variant="h5"
               component="div"
-              onClick={() => onCurrentWellIdChange(wellWithSiteData?.wellId)}
+              onClick={(event) => event.stopPropagation()}
               sx={{
-                cursor: "pointer",
                 display: "inline-block",
                 mb: 1,
-                ":hover": {
-                  color: "text.primary",
-                  textDecoration: "underline",
-                },
+                cursor: "text",
               }}
             >
               Скважина: {wellWithSiteData?.wellCommonName}
             </Typography>
-            <Typography sx={{ color: "text.secondary", mb: 0.5 }}>
+            <br></br>
+            <Typography
+              sx={{
+                display: "inline-block",
+                color: "text.secondary",
+                mb: 0.5,
+                cursor: "text",
+              }}
+              onClick={(event) => event.stopPropagation()}
+            >
               Проект: <br></br> {wellWithSiteData?.reason || "Нет данных"}
             </Typography>
-            <Typography sx={{ color: "text.secondary", mb: 1.5 }}>
+            <br></br>
+            <Typography
+              sx={{
+                display: "inline-block",
+                color: "text.secondary",
+                mb: 1.5,
+                cursor: "text",
+              }}
+              onClick={(event) => event.stopPropagation()}
+            >
               Дата забуривания: <br></br>{" "}
               {wellWithSiteData?.spudDate ? spudDateLocal : "Нет данных"}
             </Typography>
-            <Box sx={{ display: "flex", gap: "10px", marginBottom: "5px", minHeight: "32px" }}>
+            <Box
+              sx={{
+                display: "flex",
+                gap: "10px",
+                marginBottom: "5px",
+                minHeight: "32px",
+                cursor: "text",
+              }}
+            >
               {uniqueEvents?.map((uniqueEvent) => (
                 <Chip
                   label={uniqueEvent}
