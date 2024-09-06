@@ -91,7 +91,7 @@ export default function OilWellCard({
   }, [wellWithSiteData?.wellId, eventCache]);
 
   return (
-    <Box sx={{ minWidth: 275, minHeight: 300 }}>
+    <Box sx={{ minWidth: 275 }}>
       <Card
         sx={{
           border:
@@ -132,7 +132,7 @@ export default function OilWellCard({
               Дата забуривания: <br></br>{" "}
               {wellWithSiteData?.spudDate ? spudDateLocal : "Нет данных"}
             </Typography>
-            <Box sx={{ display: "flex", gap: "10px", marginBottom: "5px" }}>
+            <Box sx={{ display: "flex", gap: "10px", marginBottom: "5px", minHeight: "32px" }}>
               {uniqueEvents?.map((uniqueEvent) => (
                 <Chip
                   label={uniqueEvent}
