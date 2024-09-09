@@ -9,6 +9,7 @@ import Box from "@mui/material/Box";
 import { IReport } from "../../interfaces/IReport";
 import { reports } from "../../constants/reports";
 import TableSectionTitle from "../UI/TableSectionTitle/TableSectionTitle";
+import { genPlanFilter } from "../../constants/genPlanFilter";
 
 const TableSection = ({
   currentWellId,
@@ -41,7 +42,7 @@ const TableSection = ({
       });
     }
     if (isGenPlanFilterOn) {
-      filters.push({ id: "reportAlias", value: "GEN_PLAN" });
+      filters.push(genPlanFilter);
     }
     setColumnFilters(filters);
   }, [isGenPlanFilterOn, eventFilters]);
