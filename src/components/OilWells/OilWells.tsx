@@ -11,6 +11,7 @@ import ErrorMessage from "../UI/ErrorMessage/ErrorMessage";
 import CurrentWellTitle from "../UI/CurrentWellTitle/CurrentWellTitle";
 import Calendar from "../UI/Calendar/Calendar";
 import NoWellsMessage from "../UI/NoWellsMessage/NoWellsMessage";
+import { BASE_URL } from "../../constants/baseURL";
 
 function calculateRowsPerPage(width: number) {
   return width >= 600 ? Math.round((width - 380) / 300) : 1;
@@ -53,7 +54,7 @@ export default function OilWells({
 
   useEffect(() => {
     fetch(
-      `https://edmrest.emeryone.com/Universal/CdSiteSource/projectId/${projectId}/?fields=projectId,siteId,siteName`
+      `${BASE_URL}/Universal/CdSiteSource/projectId/${projectId}/?fields=projectId,siteId,siteName`
     )
       .then((res) => {
         return res.json();
@@ -63,7 +64,7 @@ export default function OilWells({
 
         if (allSites) {
           fetch(
-            `https://edmrest.emeryone.com/Universal/CdWellSource/siteId/${allSites}/?fields=siteId,wellCommonName,wellId,spudDate,reason`
+            `${BASE_URL}/Universal/CdWellSource/siteId/${allSites}/?fields=siteId,wellCommonName,wellId,spudDate,reason`
           )
             .then((res) => {
               return res.json();

@@ -7,6 +7,7 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Chip from "@mui/material/Chip/Chip";
 import { useEffect, useState } from "react";
+import { BASE_URL } from "../../constants/baseURL";
 
 export default function OilWellCard({
   wellWithSiteData,
@@ -70,7 +71,7 @@ export default function OilWellCard({
       setUniqueEvents(eventCache[wellWithSiteData?.wellId]);
     } else {
       fetch(
-        `https://edmrest.emeryone.com/Universal/DmEventT/wellId/${wellWithSiteData?.wellId}/?fields=wellId,eventId,eventCode`
+        `${BASE_URL}/Universal/DmEventT/wellId/${wellWithSiteData?.wellId}/?fields=wellId,eventId,eventCode`
       )
         .then((res) => res.json())
         .then((events) => {
