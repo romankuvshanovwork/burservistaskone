@@ -12,6 +12,10 @@ import { useLocation, useParams } from "react-router-dom";
 import { IWell } from "../../interfaces/IWell";
 import { ISite } from "../../interfaces/ISite";
 
+function calculateRowsPerPage(width: number) {
+  return width >= 600 ? Math.round((width - 380) / 300) : 1;
+}
+
 export default function OilWells({
   currentWellId,
   onCurrentWellIdChange,
@@ -47,10 +51,6 @@ export default function OilWells({
   ) => {
     setPage(newPage);
   };
-
-  function calculateRowsPerPage(width: number) {
-    return width >= 600 ? Math.round((width - 380) / 300) : 1;
-  }
 
   useEffect(() => {
     fetch(
