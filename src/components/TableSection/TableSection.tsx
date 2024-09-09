@@ -6,7 +6,6 @@ import {
   type MRT_ColumnFiltersState,
 } from "material-react-table";
 import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
 import { IReport } from "../../interfaces/IReport";
 import { reports } from "../../constants/reports";
 import TableSectionTitle from "../UI/TableSectionTitle/TableSectionTitle";

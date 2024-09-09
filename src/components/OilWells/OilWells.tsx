@@ -1,10 +1,5 @@
 import * as React from "react";
 import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import dayjs, { Dayjs } from "dayjs";
 import OilWellCard from "../OilWellCard/OilWellCard";
 import TablePagination from "@mui/material/TablePagination/TablePagination";
 import { useEffect, useState } from "react";
@@ -14,6 +9,8 @@ import { ISite } from "../../interfaces/ISite";
 import LoadingMessage from "../UI/LoadingMessage/LoadingMessage";
 import ErrorMessage from "../UI/ErrorMessage/ErrorMessage";
 import CurrentWellTitle from "../UI/CurrentWellTitle/CurrentWellTitle";
+import Calendar from "../UI/Calendar/Calendar";
+import NoWellsMessage from "../UI/NoWellsMessage/NoWellsMessage";
 
 function calculateRowsPerPage(width: number) {
   return width >= 600 ? Math.round((width - 380) / 300) : 1;
@@ -36,7 +33,6 @@ export default function OilWells({
   const [rowsPerPage, setRowsPerPage] = useState(
     calculateRowsPerPage(window.innerWidth)
   );
-  const [calendarDate, setCalendarDate] = useState<Dayjs | null>(dayjs());
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -157,24 +153,11 @@ export default function OilWells({
             )}
           </>
         ) : (
-          <Typography variant="body1" gutterBottom>
-            Нет скважин по этому месторождению. Пожалуйста, выберите другое
-            месторождение.
-          </Typography>
+          <NoWellsMessage noWellsMessage="Нет скважин по этому месторождению. Пожалуйста, выберите другое месторождение." />
         )}
       </Box>
 
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <DateCalendar
-          sx={{
-            marginRight: "0",
-            flexShrink: 0,
-            display: { xs: "none", sm: "block" },
-          }}
-          value={calendarDate}
-          onChange={(newValue) => setCalendarDate(newValue)}
-        />
-      </LocalizationProvider>
+      <Calendar />
     </Box>
   );
 }
