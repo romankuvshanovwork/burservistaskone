@@ -10,6 +10,7 @@ import { IReport } from "../../interfaces/IReport";
 import { reports } from "../../constants/reports";
 import TableSectionTitle from "../UI/TableSectionTitle/TableSectionTitle";
 import { genPlanFilter } from "../../constants/genPlanFilter";
+import useReports from "../../api/useReports";
 
 const TableSection = ({
   currentWellId,
@@ -20,18 +21,14 @@ const TableSection = ({
   isGenPlanFilterOn?: boolean;
   eventFilters: String[];
 }) => {
-  // Data and fetching state
-  const [data, setData] = useState<IReport[]>([]);
-  const [isError, setIsError] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isRefetching, setIsRefetching] = useState(false);
-  const [rowCount, setRowCount] = useState(0);
-
   // Table state
   const [columnFilters, setColumnFilters] = useState<MRT_ColumnFiltersState>(
     []
   );
   const [globalFilter, setGlobalFilter] = useState("");
+
+  const { data, isError, isLoading, isRefetching, rowCount } =
+    useReports(currentWellId);
 
   useEffect(() => {
     const filters = [];
@@ -47,34 +44,7 @@ const TableSection = ({
     setColumnFilters(filters);
   }, [isGenPlanFilterOn, eventFilters]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      if (!data?.length) {
-        setIsLoading(true);
-      } else {
-        setIsRefetching(true);
-      }
-
-      try {
-        const response = await fetch(
-          `https://edmrest.emeryone.com/Universal/DmReportJournal/wellId/${currentWellId}/?fields=eventCode,reportJournalId,wellId,wellboreId,dateReport,eventId,reportAlias,description,entityType,reportNo`
-        );
-        const json = (await response.json()) as IReport[];
-        setData(json);
-        setRowCount(json.length);
-      } catch (error) {
-        setIsError(true);
-        console.error(error);
-        return;
-      }
-      setIsError(false);
-      setIsLoading(false);
-      setIsRefetching(false);
-    };
-    fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentWellId]);
-
+  // Вынести в файл, который я положу в этой же папке рядом?
   const columns = useMemo<MRT_ColumnDef<IReport>[]>(
     () => [
       {
