@@ -15,7 +15,7 @@ const TableSection = ({
   isGenPlanFilterOn,
   eventFilters,
 }: {
-  currentWellId: number;
+  currentWellId: String;
   isGenPlanFilterOn?: boolean;
   eventFilters: String[];
 }) => {

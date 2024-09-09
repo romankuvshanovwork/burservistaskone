@@ -18,7 +18,7 @@ export default function OilWellCard({
 }: {
   wellWithSiteData: any;
   onCurrentWellIdChange: Function;
-  currentWellId: number;
+  currentWellId: String;
   onIsGenPlanFilterOnChange: Function;
   eventFilters: String[];
   onEventFiltersChange: Function;
@@ -76,7 +76,7 @@ export default function OilWellCard({
         .then((events) => {
           const uniqueEventCodes = events
             ?.map((event: any) => event?.eventCode)
-            .filter((x: any, i: any, a: any) => a.indexOf(x) === i)
+            ?.filter((x: any, i: any, a: any) => a.indexOf(x) === i)
             ?.filter((event: string) => event);
           // Cache the data
           setEventCache((prevCache) => ({

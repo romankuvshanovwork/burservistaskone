@@ -19,7 +19,7 @@ export default function OilWells({
   onEventFiltersChange,
   eventFilters,
 }: {
-  currentWellId: number;
+  currentWellId: String;
   onCurrentWellIdChange: Function;
   onIsGenPlanFilterOnChange: Function;
   onEventFiltersChange: Function;

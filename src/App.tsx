@@ -6,7 +6,7 @@ import { Route, Routes } from "react-router-dom";
 import Layout from "./components/Layout/Layout";
 
 function App() {
-  const [currentWellId, setCurrentWellId] = useState(0); // Текущая выбранная скважина
+  const [currentWellId, setCurrentWellId] = useState<String>(""); // Текущая выбранная скважина
   const [isGenPlanFilterOn, setIsGenPlanFilterOn] = useState(false); // Включен ли фильтр по ген. плану
   const [eventFilters, setEventFilters] = useState<String[]>([]); // Массив с фильтрами: БУР, ОСВ, ABN
 
