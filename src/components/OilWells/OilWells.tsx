@@ -11,6 +11,8 @@ import { useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import { IWell } from "../../interfaces/IWell";
 import { ISite } from "../../interfaces/ISite";
+import LoadingMessage from "../UI/LoadingMessage/LoadingMessage";
+import ErrorMessage from "../UI/ErrorMessage/ErrorMessage";
 
 function calculateRowsPerPage(width: number) {
   return width >= 600 ? Math.round((width - 380) / 300) : 1;
@@ -118,14 +120,9 @@ export default function OilWells({
         </Typography>
 
         {loading ? (
-          <Typography variant="body1" gutterBottom>
-            Загрузка... Пожалуйста, подождите.
-          </Typography>
+          <LoadingMessage loadingMessage="Загрузка... Пожалуйста, подождите." />
         ) : error ? (
-          <Typography variant="body1" gutterBottom>
-            Произошла сетевая ошибка. Пожалуйста, проверьте сетевое соединение.
-            Или повторите попытку позднее.
-          </Typography>
+          <ErrorMessage errorMessage="Произошла сетевая ошибка. Пожалуйста, проверьте сетевое соединение. Или повторите попытку позднее." />
         ) : wellsWithSiteData.length > 0 ? (
           <>
             <Box sx={{ overflowY: "hidden", overflowX: "hidden" }}>
