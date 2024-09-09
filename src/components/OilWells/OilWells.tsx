@@ -13,6 +13,7 @@ import { IWell } from "../../interfaces/IWell";
 import { ISite } from "../../interfaces/ISite";
 import LoadingMessage from "../UI/LoadingMessage/LoadingMessage";
 import ErrorMessage from "../UI/ErrorMessage/ErrorMessage";
+import CurrentWellTitle from "../UI/CurrentWellTitle/CurrentWellTitle";
 
 function calculateRowsPerPage(width: number) {
   return width >= 600 ? Math.round((width - 380) / 300) : 1;
@@ -115,9 +116,7 @@ export default function OilWells({
       }}
     >
       <Box sx={{ maxWidth: "100%", flexShrink: 1, minWidth: "275px" }}>
-        <Typography variant="h6" gutterBottom>
-          {projectName}
-        </Typography>
+        <CurrentWellTitle title={projectName} />
 
         {loading ? (
           <LoadingMessage loadingMessage="Загрузка... Пожалуйста, подождите." />

@@ -9,6 +9,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { IReport } from "../../interfaces/IReport";
 import { reports } from "../../constants/reports";
+import TableSectionTitle from "../UI/TableSectionTitle/TableSectionTitle";
 
 const TableSection = ({
   currentWellId,
@@ -169,13 +170,7 @@ const TableSection = ({
 
   return (
     <Box sx={{ paddingX: "30px", paddingY: "10px", marginBottom: "25px" }}>
-      <Typography
-        variant="h5"
-        gutterBottom
-        sx={{ color: "#1976d2", marginBottom: "5px" }}
-      >
-        Отчеты
-      </Typography>
+      <TableSectionTitle title="Отчеты" />
       <MaterialReactTable table={table} />
     </Box>
   );

@@ -10,6 +10,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import { IProject } from "../../interfaces/IProject";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
+import HeaderTitle from "../UI/HeaderTitle/HeaderTitle";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -94,9 +95,7 @@ export default function Header() {
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
         <Toolbar>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            MUI
-          </Typography>
+          <HeaderTitle title="MUI" />
           <Box
             sx={{
               overflowX: "auto",
@@ -115,24 +114,23 @@ export default function Header() {
                 columnGap: "5px",
               }}
             >
-              {filteredProjects
-                .map((project) => (
-                  <Button
-                    component={RouterLink}
-                    to={`/projectId/${project?.projectId}`}
-                    state={{ projectName: project?.projectName }}
-                    key={project?.projectId}
-                    sx={{
-                      my: 2,
-                      color: "white",
-                      display: "block",
-                      whiteSpace: "nowrap",
-                      textAlign: "center",
-                    }}
-                  >
-                    {project?.projectName}
-                  </Button>
-                ))}
+              {filteredProjects.map((project) => (
+                <Button
+                  component={RouterLink}
+                  to={`/projectId/${project?.projectId}`}
+                  state={{ projectName: project?.projectName }}
+                  key={project?.projectId}
+                  sx={{
+                    my: 2,
+                    color: "white",
+                    display: "block",
+                    whiteSpace: "nowrap",
+                    textAlign: "center",
+                  }}
+                >
+                  {project?.projectName}
+                </Button>
+              ))}
             </Box>
           </Box>
           <Search
