@@ -163,7 +163,7 @@ export default function OilWellCard({
                 cursor: "text",
               }}
             >
-              {uniqueEvents?.map((uniqueEvent) => (
+              {uniqueEvents?.map((uniqueEvent: string) => (
                 <Chip
                   label={uniqueEvent}
                   key={uniqueEvent}
