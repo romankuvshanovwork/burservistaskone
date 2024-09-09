@@ -73,7 +73,7 @@ const TableSection = ({
     };
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [columnFilters, globalFilter, currentWellId]);
+  }, [currentWellId]);
 
   const columns = useMemo<MRT_ColumnDef<IReport>[]>(
     () => [

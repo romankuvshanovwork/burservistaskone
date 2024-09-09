@@ -1,40 +1,25 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import Button from "@mui/material/Button";
-import { IProject } from "../../interfaces/IProject";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import HeaderTitle from "../UI/HeaderTitle/HeaderTitle";
 import HeaderSearch from "../UI/HeaderSearch/HeaderSearch";
-import { BASE_URL } from "../../constants/baseURL";
+import { useProjects } from "../../api/useProjects";
 
 export default function Header() {
-  const [projects, setProjects] = useState<IProject[]>([]);
   const [serachQuery, setSearchQuery] = useState<string>();
   const routeParams = useParams();
   const navigate = useNavigate();
+  const projects = useProjects();
 
-  useEffect(() => {
-    fetch(
-      `${BASE_URL}/Universal/CdProjectSource?fields=projectName,projectId`
-    )
-      .then((res) => {
-        return res.json();
-      })
-      .then((projects) => {
-        setProjects(projects);
-        const firstProject = projects?.[0];
-        if (!routeParams?.projectId)
-          navigate(`/projectId/${firstProject?.projectId}`, {
-            state: { projectName: firstProject?.projectName },
-          });
-      })
-      .catch((error) => {
-        console.error("Error fetching projects:", error);
-      });
-  }, []);
+  const firstProject = projects?.[0];
+  if (!routeParams?.projectId)
+    navigate(`/projectId/${firstProject?.projectId}`, {
+      state: { projectName: firstProject?.projectName },
+    });
 
   const filteredProjects = useMemo(
     () =>
