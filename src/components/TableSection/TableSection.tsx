@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   MaterialReactTable,
   useMaterialReactTable,
@@ -11,6 +11,49 @@ import { reports } from "../../constants/reports";
 import TableSectionTitle from "../UI/TableSectionTitle/TableSectionTitle";
 import { genPlanFilter } from "../../constants/genPlanFilter";
 import useReports from "../../api/useReports";
+
+const columns: MRT_ColumnDef<IReport>[] = [
+  {
+    accessorKey: "reportAlias",
+    header: "Тип",
+    size: 100,
+    enableSorting: false,
+    filterVariant: "text",
+    Cell: ({ cell }) =>
+      reports.find((report) => report?.alias === cell.getValue())?.type ||
+      "Нет данных",
+  },
+  {
+    accessorKey: "dateReport",
+    header: "Дата",
+    size: 130,
+    accessorFn: (row) => new Date(row.dateReport),
+    Cell: ({ cell }) => cell.getValue<Date>()?.toLocaleDateString(),
+  },
+  {
+    accessorKey: "reportNo",
+    header: "№",
+    size: 50,
+    enableSorting: false,
+  },
+  {
+    accessorKey: "description",
+    header: "Описание",
+    size: 200,
+    enableSorting: false,
+    grow: true,
+    filterVariant: "text",
+    Cell: ({ cell }) => cell.getValue<String>() || "Нет данных",
+  },
+  {
+    accessorKey: "eventCode",
+    header: "Мероприятие",
+    size: 100,
+    enableResizing: false,
+    enableSorting: false,
+    filterVariant: "multi-select",
+  },
+];
 
 const TableSection = ({
   currentWellId,
@@ -43,53 +86,6 @@ const TableSection = ({
     }
     setColumnFilters(filters);
   }, [isGenPlanFilterOn, eventFilters]);
-
-  // Вынести в файл, который я положу в этой же папке рядом?
-  const columns = useMemo<MRT_ColumnDef<IReport>[]>(
-    () => [
-      {
-        accessorKey: "reportAlias",
-        header: "Тип",
-        size: 100,
-        enableSorting: false,
-        filterVariant: "text",
-        Cell: ({ cell }) =>
-          reports.find((report) => report?.alias === cell.getValue())?.type ||
-          "Нет данных",
-      },
-      {
-        accessorKey: "dateReport",
-        header: "Дата",
-        size: 130,
-        accessorFn: (row) => new Date(row.dateReport),
-        Cell: ({ cell }) => cell.getValue<Date>()?.toLocaleDateString(),
-      },
-      {
-        accessorKey: "reportNo",
-        header: "№",
-        size: 50,
-        enableSorting: false,
-      },
-      {
-        accessorKey: "description",
-        header: "Описание",
-        size: 200,
-        enableSorting: false,
-        grow: true,
-        filterVariant: "text",
-        Cell: ({ cell }) => cell.getValue<String>() || "Нет данных",
-      },
-      {
-        accessorKey: "eventCode",
-        header: "Мероприятие",
-        size: 100,
-        enableResizing: false,
-        enableSorting: false,
-        filterVariant: "multi-select",
-      },
-    ],
-    []
-  );
 
   const table = useMaterialReactTable({
     columns,
