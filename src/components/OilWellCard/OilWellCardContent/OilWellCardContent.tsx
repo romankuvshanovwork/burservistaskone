@@ -1,19 +1,19 @@
 import Typography from "@mui/material/Typography/Typography";
 import CardContent from "@mui/material/CardContent";
+import { IWellWithSiteData } from "../../../interfaces/IWellWithSiteData";
 
 export default function OilWellCardContent({
   wellWithSiteData,
 }: {
-  wellWithSiteData: any;
+  wellWithSiteData: IWellWithSiteData;
 }) {
-  const spudDateLocal = new Date(wellWithSiteData?.spudDate).toLocaleDateString(
-    "ru-RU",
-    {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-    }
-  );
+  const spudDateLocal = new Date(
+    wellWithSiteData?.spudDate || ""
+  ).toLocaleDateString("ru-RU", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  });
 
   return (
     <CardContent sx={{ paddingBottom: 0 }}>

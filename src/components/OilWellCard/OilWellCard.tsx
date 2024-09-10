@@ -4,6 +4,7 @@ import Card from "@mui/material/Card";
 import useUniqueEvents from "../../api/useUniqueEvents";
 import OilWellCardContent from "./OilWellCardContent/OilWellCardContent";
 import OilWellCardActions from "./OilWellCardActions/OilWellCardActions";
+import { IWellWithSiteData } from "../../interfaces/IWellWithSiteData";
 
 export default function OilWellCard({
   wellWithSiteData,
@@ -13,7 +14,7 @@ export default function OilWellCard({
   eventFilters,
   onEventFiltersChange,
 }: {
-  wellWithSiteData: any;
+  wellWithSiteData: IWellWithSiteData;
   onCurrentWellIdChange: Function;
   currentWellId: String;
   onIsGenPlanFilterOnChange: Function;

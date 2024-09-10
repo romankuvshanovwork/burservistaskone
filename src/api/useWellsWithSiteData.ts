@@ -3,12 +3,13 @@ import { ISite } from "../interfaces/ISite";
 import { IWell } from "../interfaces/IWell";
 import { BASE_URL } from "../constants/baseURL";
 import axios from "axios";
+import { IWellWithSiteData } from "../interfaces/IWellWithSiteData";
 
 export function useWellsWithSiteData(
   onCurrentWellIdChange: Function,
   projectId?: string
 ) {
-  const [wellsWithSiteData, setWellsWithSiteData] = useState<any[]>([]);
+  const [wellsWithSiteData, setWellsWithSiteData] = useState<IWellWithSiteData[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 

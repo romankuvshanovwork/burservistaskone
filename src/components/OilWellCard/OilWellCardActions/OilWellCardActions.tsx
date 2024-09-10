@@ -2,6 +2,7 @@ import CardActions from "@mui/material/CardActions";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Chip from "@mui/material/Chip/Chip";
+import { IWellWithSiteData } from "../../../interfaces/IWellWithSiteData";
 
 export default function OilWellCardActions({
   uniqueEvents,
@@ -15,7 +16,7 @@ export default function OilWellCardActions({
   uniqueEvents: string[];
   eventFilters: String[];
   currentWellId: String;
-  wellWithSiteData: any;
+  wellWithSiteData: IWellWithSiteData;
   activateTypeFilter: Function;
   activateGenPlanFilter: Function;
   resetAllFilters: Function;
