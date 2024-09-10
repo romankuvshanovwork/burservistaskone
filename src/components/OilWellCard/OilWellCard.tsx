@@ -6,8 +6,7 @@ import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Chip from "@mui/material/Chip/Chip";
-import { useEffect, useState } from "react";
-import { BASE_URL } from "../../constants/baseURL";
+import useUniqueEvents from "../../api/useUniqueEvents";
 
 export default function OilWellCard({
   wellWithSiteData,
@@ -24,8 +23,7 @@ export default function OilWellCard({
   eventFilters: String[];
   onEventFiltersChange: Function;
 }) {
-  const [uniqueEvents, setUniqueEvents] = useState<string[]>([]);
-  const [eventCache, setEventCache] = useState<{ [key: string]: string[] }>({});
+  const { uniqueEvents } = useUniqueEvents(wellWithSiteData?.wellId);
 
   const spudDateLocal = new Date(wellWithSiteData?.spudDate).toLocaleDateString(
     "ru-RU",
@@ -66,30 +64,6 @@ export default function OilWellCard({
     onEventFiltersChange(nextCurrentFilters);
   }
 
-  useEffect(() => {
-    if (eventCache[wellWithSiteData?.wellId]) {
-      setUniqueEvents(eventCache[wellWithSiteData?.wellId]);
-    } else {
-      fetch(
-        `${BASE_URL}/Universal/DmEventT/wellId/${wellWithSiteData?.wellId}/?fields=wellId,eventId,eventCode`
-      )
-        .then((res) => res.json())
-        .then((events) => {
-          const uniqueEventCodes = events
-            ?.map((event: any) => event?.eventCode)
-            ?.filter((x: any, i: any, a: any) => a.indexOf(x) === i)
-            ?.filter((event: string) => event);
-          // Cache the data
-          setEventCache((prevCache) => ({
-            ...prevCache,
-            [wellWithSiteData?.wellId]: uniqueEventCodes,
-          }));
-          setUniqueEvents(uniqueEventCodes);
-        })
-        .catch(() => {});
-    }
-  }, [wellWithSiteData?.wellId, eventCache]);
-
   return (
     <Box sx={{ minWidth: 275 }}>
       <Card
@@ -103,7 +77,7 @@ export default function OilWellCard({
         }}
         variant="outlined"
       >
-        <React.Fragment>
+        <>
           <CardContent>
             <Typography
               gutterBottom
@@ -197,7 +171,7 @@ export default function OilWellCard({
               Все отчеты
             </Button>
           </CardActions>
-        </React.Fragment>
+        </>
       </Card>
     </Box>
   );
