@@ -1,9 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   MaterialReactTable,
   useMaterialReactTable,
+  MRT_EditActionButtons,
   type MRT_ColumnDef,
   type MRT_ColumnFiltersState,
+  MRT_TableOptions,
+  createRow,
 } from "material-react-table";
 import Box from "@mui/material/Box";
 import { IReport } from "../../interfaces/IReport";
@@ -11,49 +14,12 @@ import { reports } from "../../constants/reports";
 import TableSectionTitle from "../UI/TableSectionTitle/TableSectionTitle";
 import { genPlanFilter } from "../../constants/genPlanFilter";
 import useReports from "../../api/useReports";
-
-const columns: MRT_ColumnDef<IReport>[] = [
-  {
-    accessorKey: "reportAlias",
-    header: "Тип",
-    size: 100,
-    enableSorting: false,
-    filterVariant: "text",
-    Cell: ({ cell }) =>
-      reports.find((report) => report?.alias === cell.getValue())?.type ||
-      "Нет данных",
-  },
-  {
-    accessorKey: "dateReport",
-    header: "Дата",
-    size: 130,
-    accessorFn: (row) => new Date(row.dateReport),
-    Cell: ({ cell }) => cell.getValue<Date>()?.toLocaleDateString(),
-  },
-  {
-    accessorKey: "reportNo",
-    header: "№",
-    size: 50,
-    enableSorting: false,
-  },
-  {
-    accessorKey: "description",
-    header: "Описание",
-    size: 200,
-    enableSorting: false,
-    grow: true,
-    filterVariant: "text",
-    Cell: ({ cell }) => cell.getValue<String>() || "Нет данных",
-  },
-  {
-    accessorKey: "eventCode",
-    header: "Мероприятие",
-    size: 100,
-    enableResizing: false,
-    enableSorting: false,
-    filterVariant: "multi-select",
-  },
-];
+import Button from "@mui/material/Button/Button";
+import DialogTitle from "@mui/material/DialogTitle/DialogTitle";
+import DialogContent from "@mui/material/DialogContent/DialogContent";
+import DialogActions from "@mui/material/DialogActions/DialogActions";
+import useUniqueEvents from "../../api/useUniqueEvents";
+import MenuItem from "@mui/material/MenuItem/MenuItem";
 
 const TableSection = ({
   currentWellId,
@@ -69,9 +35,20 @@ const TableSection = ({
     []
   );
   const [globalFilter, setGlobalFilter] = useState("");
+  const [validationErrors, setValidationErrors] = useState<
+    Record<string, string | undefined>
+  >({});
+
+  const [reportsData, setReportsData] = useState<IReport[]>([]);
 
   const { data, isError, isLoading, isRefetching, rowCount } =
     useReports(currentWellId);
+
+  const { uniqueEvents } = useUniqueEvents(currentWellId as string);
+  console.log("uniqueEvents");
+  console.log(uniqueEvents);
+
+  useEffect(() => setReportsData(data), [data]);
 
   useEffect(() => {
     const filters = [];
@@ -87,9 +64,161 @@ const TableSection = ({
     setColumnFilters(filters);
   }, [isGenPlanFilterOn, eventFilters]);
 
+  const columns = useMemo<MRT_ColumnDef<IReport>[]>(
+    () => [
+      {
+        accessorKey: "reportAlias",
+        header: "Тип",
+        size: 100,
+        enableSorting: false,
+        filterVariant: "text",
+        Cell: ({ cell }) =>
+          reports.find((report) => report?.alias === cell.getValue())?.type ||
+          "Нет данных",
+        editVariant: "select",
+        editSelectOptions: reports.map((report) => report.alias),
+        muiEditTextFieldProps: {
+          select: true,
+          required: true,
+          error: !!validationErrors?.reportAlias,
+          helperText: validationErrors?.reportAlias,
+          SelectProps: {
+            renderValue: (value) => {
+              const selectedAlias = value as string;
+              const report = reports.find((report) => report.alias === selectedAlias);
+              return report?.type || "Нет данных";
+            },
+          },
+          children: reports.map((report) => (
+            <MenuItem key={report.alias} value={report.alias}>
+              {report.type}
+            </MenuItem>
+          )),
+        },
+      },
+      {
+        accessorKey: "dateReport",
+        header: "Дата",
+        size: 130,
+        accessorFn: (row) => new Date(row.dateReport),
+        Cell: ({ cell }) => cell.getValue<Date>()?.toLocaleDateString(),
+        muiEditTextFieldProps: {
+          required: true,
+          type: "date",
+          error: !!validationErrors?.dateReport,
+          helperText: validationErrors?.dateReport,
+          //remove any previous validation errors when user focuses on the input
+          onFocus: () =>
+            setValidationErrors({
+              ...validationErrors,
+              dateReport: undefined,
+            }),
+          //optionally add validation checking for onBlur or onChange
+        },
+      },
+      {
+        accessorKey: "reportNo",
+        header: "№",
+        size: 50,
+        enableSorting: false,
+        muiEditTextFieldProps: {
+          required: true,
+          type: "number",
+          error: !!validationErrors?.reportNo,
+          helperText: validationErrors?.reportNo,
+          //remove any previous validation errors when user focuses on the input
+          onFocus: () =>
+            setValidationErrors({
+              ...validationErrors,
+              reportNo: undefined,
+            }),
+          //optionally add validation checking for onBlur or onChange
+        },
+      },
+      {
+        accessorKey: "description",
+        header: "Описание",
+        size: 200,
+        enableSorting: false,
+        grow: true,
+        filterVariant: "text",
+        Cell: ({ cell }) => cell.getValue<String>() || "Нет данных",
+        muiEditTextFieldProps: {
+          required: true,
+          error: !!validationErrors?.description,
+          helperText: validationErrors?.description,
+          //remove any previous validation errors when user focuses on the input
+          onFocus: () =>
+            setValidationErrors({
+              ...validationErrors,
+              description: undefined,
+            }),
+          //optionally add validation checking for onBlur or onChange
+        },
+      },
+      {
+        accessorKey: "eventCode",
+        header: "Мероприятие",
+        size: 100,
+        enableResizing: false,
+        enableSorting: false,
+        filterVariant: "multi-select",
+        editVariant: "select",
+        editSelectOptions: uniqueEvents,
+        muiEditTextFieldProps: {
+          select: true,
+          required: true,
+          error: !!validationErrors?.eventCode,
+          helperText: validationErrors?.eventCode,
+        },
+      },
+    ],
+    [uniqueEvents, validationErrors]
+  );
+
+  function createUser(values: IReport) {
+    console.log('values');
+    console.log(values);
+    setReportsData((prevReportsData) => [...prevReportsData, values]);
+  }
+
+  const handleCreateReport: MRT_TableOptions<IReport>["onCreatingRowSave"] = ({
+    values,
+    table,
+  }) => {
+    const newValidationErrors = validateReport(values);
+    if (Object.values(newValidationErrors).some((error) => error)) {
+      setValidationErrors(newValidationErrors);
+      return;
+    }
+    setValidationErrors({});
+    createUser(values);
+    table.setCreatingRow(null);
+  };
+
+  const validateRequired = (value: string) => !!value.length;
+
+  function validateReport(report: IReport) {
+    return {
+      dateReport: !validateRequired(report.dateReport)
+        ? "Дата обязательна"
+        : "",
+      description: !validateRequired(report.description)
+        ? "Описание обязательно"
+        : "",
+      eventCode: !validateRequired(report.eventCode)
+        ? "Выбор мероприятия обязателен"
+        : "",
+      reportAlias: !validateRequired(report.reportAlias)
+        ? "Выбор типа обязателен"
+        : "",
+      reportNo: !validateRequired(report.reportNo) ? "№ обязателен" : "",
+    };
+  }
+
   const table = useMaterialReactTable({
     columns,
-    data,
+    data: reportsData,
     enableRowSelection: false,
     enableColumnActions: false,
     enableTopToolbar: true,
@@ -97,6 +226,46 @@ const TableSection = ({
     enablePagination: false,
     enableBottomToolbar: false,
     enableColumnResizing: true,
+    enableEditing: false,
+    createDisplayMode: "modal",
+    onCreatingRowCancel: () => setValidationErrors({}),
+    onCreatingRowSave: handleCreateReport,
+    renderTopToolbarCustomActions: ({ table }) => (
+      <Button
+        variant="contained"
+        onClick={() => {
+          table.setCreatingRow(
+            createRow(table, {
+              dateReport: new Date().toISOString().substring(0, 10),
+              description: "",
+              eventCode: "БУР",
+              reportAlias: "DDR",
+              reportNo: "",
+              reportJournalId: "",
+              wellId: "",
+              wellboreId: "",
+              eventId: "",
+              entityType: "",
+            })
+          );
+        }}
+      >
+        Создать отчет
+      </Button>
+    ),
+    renderCreateRowDialogContent: ({ table, row, internalEditComponents }) => (
+      <>
+        <DialogTitle>Создать отчет</DialogTitle>
+        <DialogContent
+          sx={{ display: "flex", flexDirection: "column", gap: "1rem" }}
+        >
+          {internalEditComponents}
+        </DialogContent>
+        <DialogActions>
+          <MRT_EditActionButtons variant="text" table={table} row={row} />
+        </DialogActions>
+      </>
+    ),
     manualFiltering: false,
     enableColumnFilters: false,
     manualSorting: false,
@@ -111,11 +280,6 @@ const TableSection = ({
       showColumnFilters: true,
     },
     positionToolbarDropZone: "none",
-    muiTopToolbarProps: {
-      sx: {
-        minHeight: "5px",
-      },
-    },
     muiToolbarAlertBannerProps: isError
       ? {
           color: "error",
