@@ -3,7 +3,7 @@ import { BASE_URL } from "../constants/baseURL";
 import axios from "axios";
 import { IEvent } from "../interfaces/IEvent";
 
-const useUniqueEvents = (wellId: any) => {
+const useUniqueEvents = (wellId: string) => {
   const [uniqueEvents, setUniqueEvents] = useState<string[]>([]);
   const [eventCache, setEventCache] = useState<{ [key: string]: string[] }>({});
 
@@ -19,8 +19,8 @@ const useUniqueEvents = (wellId: any) => {
           const events = response.data;
           const uniqueEventCodes = events
             ?.map((event: IEvent) => event?.eventCode)
-            ?.filter((x: any, i: any, a: any) => a.indexOf(x) === i)
-            ?.filter((event: string) => event);
+            ?.filter((element: IEvent, index: number, array: IEvent[]) => array.indexOf(element) === index) // Filter: left unique elements only
+            ?.filter((event: string) => event); // Filter: No empty values
           // Cache the data
           setEventCache((prevCache) => ({
             ...prevCache,
