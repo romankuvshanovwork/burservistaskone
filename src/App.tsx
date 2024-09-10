@@ -4,9 +4,10 @@ import OilWells from "./components/OilWells/OilWells";
 import TableSection from "./components/TableSection/TableSection";
 import { Route, Routes } from "react-router-dom";
 import Layout from "./components/Layout/Layout";
+import OilWellsLayout from "./components/OilWells/OilWellsLayout/OilWellsLayout";
 
 function App() {
-  const [currentWellId, setCurrentWellId] = useState(0); // Текущая выбранная скважина
+  const [currentWellId, setCurrentWellId] = useState<String>(""); // Текущая выбранная скважина
   const [isGenPlanFilterOn, setIsGenPlanFilterOn] = useState(false); // Включен ли фильтр по ген. плану
   const [eventFilters, setEventFilters] = useState<String[]>([]); // Массив с фильтрами: БУР, ОСВ, ABN
 
@@ -17,13 +18,15 @@ function App() {
           path="projectId/:projectId"
           element={
             <>
-              <OilWells
-                currentWellId={currentWellId}
-                onCurrentWellIdChange={setCurrentWellId}
-                onIsGenPlanFilterOnChange={setIsGenPlanFilterOn}
-                eventFilters={eventFilters}
-                onEventFiltersChange={setEventFilters}
-              />
+              <OilWellsLayout>
+                <OilWells
+                  currentWellId={currentWellId}
+                  onCurrentWellIdChange={setCurrentWellId}
+                  onIsGenPlanFilterOnChange={setIsGenPlanFilterOn}
+                  eventFilters={eventFilters}
+                  onEventFiltersChange={setEventFilters}
+                />
+              </OilWellsLayout>
               <TableSection
                 currentWellId={currentWellId}
                 isGenPlanFilterOn={isGenPlanFilterOn}
