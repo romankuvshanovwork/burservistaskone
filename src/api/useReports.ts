@@ -19,11 +19,16 @@ const useReports = (currentWellId: String) => {
       }
 
       try {
-        const response = await axios.get(
-          `${BASE_URL}/Universal/DmReportJournal/wellId/${currentWellId}/?fields=eventCode,reportJournalId,wellId,wellboreId,dateReport,eventId,reportAlias,description,entityType,reportNo`
-        );
-        setData(response.data);
-        setRowCount(response.data.length);
+        if (!currentWellId) {
+          setData([]);
+          setRowCount(0);
+        } else {
+          const response = await axios.get(
+            `${BASE_URL}/Universal/DmReportJournal/wellId/${currentWellId}/?fields=eventCode,reportJournalId,wellId,wellboreId,dateReport,eventId,reportAlias,description,entityType,reportNo`
+          );
+          setData(response.data);
+          setRowCount(response.data.length);
+        }
         setIsError(false);
       } catch (error) {
         console.error("Error fetching reports:", error);
