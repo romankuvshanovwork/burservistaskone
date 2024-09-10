@@ -1,12 +1,9 @@
 import * as React from "react";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
-import CardContent from "@mui/material/CardContent";
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
-import Chip from "@mui/material/Chip/Chip";
 import useUniqueEvents from "../../api/useUniqueEvents";
+import OilWellCardContent from "./OilWellCardContent/OilWellCardContent";
+import OilWellCardActions from "./OilWellCardActions/OilWellCardActions";
 
 export default function OilWellCard({
   wellWithSiteData,
@@ -24,15 +21,6 @@ export default function OilWellCard({
   onEventFiltersChange: Function;
 }) {
   const { uniqueEvents } = useUniqueEvents(wellWithSiteData?.wellId);
-
-  const spudDateLocal = new Date(wellWithSiteData?.spudDate).toLocaleDateString(
-    "ru-RU",
-    {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-    }
-  );
 
   function resetAllFilters() {
     onCurrentWellIdChange(wellWithSiteData?.wellId);
@@ -77,101 +65,16 @@ export default function OilWellCard({
         }}
         variant="outlined"
       >
-        <>
-          <CardContent>
-            <Typography
-              gutterBottom
-              sx={{
-                display: "inline-block",
-                color: "text.secondary",
-                fontSize: 14,
-                cursor: "text",
-              }}
-              onClick={(event) => event.stopPropagation()}
-            >
-              Куст: {wellWithSiteData?.siteName}
-            </Typography>
-            <br></br>
-            <Typography
-              variant="h5"
-              component="div"
-              onClick={(event) => event.stopPropagation()}
-              sx={{
-                display: "inline-block",
-                mb: 1,
-                cursor: "text",
-              }}
-            >
-              Скважина: {wellWithSiteData?.wellCommonName}
-            </Typography>
-            <br></br>
-            <Typography
-              sx={{
-                display: "inline-block",
-                color: "text.secondary",
-                mb: 0.5,
-                cursor: "text",
-              }}
-              onClick={(event) => event.stopPropagation()}
-            >
-              Проект: <br></br> {wellWithSiteData?.reason || "Нет данных"}
-            </Typography>
-            <br></br>
-            <Typography
-              sx={{
-                display: "inline-block",
-                color: "text.secondary",
-                mb: 1.5,
-                cursor: "text",
-              }}
-              onClick={(event) => event.stopPropagation()}
-            >
-              Дата забуривания: <br></br>{" "}
-              {wellWithSiteData?.spudDate ? spudDateLocal : "Нет данных"}
-            </Typography>
-            <Box
-              sx={{
-                display: "flex",
-                gap: "10px",
-                marginBottom: "5px",
-                minHeight: "32px",
-                cursor: "text",
-              }}
-            >
-              {uniqueEvents?.map((uniqueEvent: string) => (
-                <Chip
-                  label={uniqueEvent}
-                  key={uniqueEvent}
-                  color="primary"
-                  variant={
-                    eventFilters.includes(uniqueEvent) &&
-                    currentWellId === wellWithSiteData?.wellId
-                      ? "filled"
-                      : "outlined"
-                  }
-                  sx={{ paddingX: "10px", cursor: "pointer" }}
-                  onClick={() => activateTypeFilter(uniqueEvent)}
-                />
-              ))}
-            </Box>
-          </CardContent>
-          <CardActions>
-            <Button
-              variant="text"
-              sx={{ fontWeight: "bold" }}
-              onClick={() => activateGenPlanFilter()}
-            >
-              План
-            </Button>
-            <Button
-              variant="text"
-              sx={{ fontWeight: "bold" }}
-              onClick={() => resetAllFilters()}
-            >
-              Все отчеты
-            </Button>
-          </CardActions>
-        </>
+        <OilWellCardContent wellWithSiteData={wellWithSiteData} />
+        <OilWellCardActions
+          uniqueEvents={uniqueEvents}
+          eventFilters={eventFilters}
+          currentWellId={currentWellId}
+          wellWithSiteData={wellWithSiteData}
+          activateTypeFilter={activateTypeFilter}
+          activateGenPlanFilter={activateGenPlanFilter}
+          resetAllFilters={resetAllFilters}
+        />
       </Card>
     </Box>
   );
