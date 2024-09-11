@@ -20,6 +20,7 @@ import DialogContent from "@mui/material/DialogContent/DialogContent";
 import DialogActions from "@mui/material/DialogActions/DialogActions";
 import MenuItem from "@mui/material/MenuItem/MenuItem";
 import { eventTypes } from "../../constants/eventTypes";
+import NewReportModal from "../NewReportModal/NewReportModal";
 
 const validateRequired = (value: string) => !!value.length;
 
@@ -263,6 +264,7 @@ const TableSection = ({
           {internalEditComponents}
         </DialogContent>
         <DialogActions>
+          {/* eslint-disable-next-line react/jsx-pascal-case  */}
           <MRT_EditActionButtons variant="text" table={table} row={row} />
         </DialogActions>
       </>
@@ -301,7 +303,10 @@ const TableSection = ({
 
   return (
     <Box sx={{ paddingX: "30px", paddingY: "10px", marginBottom: "25px" }}>
-      <TableSectionTitle title="Отчеты" />
+      <Box sx={{display: 'flex', flexDirection: 'row', columnGap: '15px', marginBottom: '10px'}}>
+        <TableSectionTitle title="Отчеты" />
+        <NewReportModal />
+      </Box>
       <MaterialReactTable table={table} />
     </Box>
   );
