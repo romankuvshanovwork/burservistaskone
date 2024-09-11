@@ -1,12 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
 import {
+  createRow,
   MaterialReactTable,
   useMaterialReactTable,
   MRT_EditActionButtons,
+  MRT_TableOptions,
   type MRT_ColumnDef,
   type MRT_ColumnFiltersState,
-  MRT_TableOptions,
-  createRow,
 } from "material-react-table";
 import Box from "@mui/material/Box";
 import { IReport } from "../../interfaces/IReport";
@@ -18,8 +18,26 @@ import Button from "@mui/material/Button/Button";
 import DialogTitle from "@mui/material/DialogTitle/DialogTitle";
 import DialogContent from "@mui/material/DialogContent/DialogContent";
 import DialogActions from "@mui/material/DialogActions/DialogActions";
-import useUniqueEvents from "../../api/useUniqueEvents";
 import MenuItem from "@mui/material/MenuItem/MenuItem";
+import { eventTypes } from "../../constants/eventTypes";
+
+const validateRequired = (value: string) => !!value.length;
+
+function validateReport(report: IReport) {
+  return {
+    dateReport: !validateRequired(report.dateReport) ? "Дата обязательна" : "",
+    description: !validateRequired(report.description)
+      ? "Описание обязательно"
+      : "",
+    eventCode: !validateRequired(report.eventCode)
+      ? "Выбор мероприятия обязателен"
+      : "",
+    reportAlias: !validateRequired(report.reportAlias)
+      ? "Выбор типа обязателен"
+      : "",
+    reportNo: !validateRequired(report.reportNo) ? "№ обязателен" : "",
+  };
+}
 
 const TableSection = ({
   currentWellId,
@@ -43,10 +61,6 @@ const TableSection = ({
 
   const { data, isError, isLoading, isRefetching, rowCount } =
     useReports(currentWellId);
-
-  const { uniqueEvents } = useUniqueEvents(currentWellId as string);
-  console.log("uniqueEvents");
-  console.log(uniqueEvents);
 
   useEffect(() => setReportsData(data), [data]);
 
@@ -85,7 +99,9 @@ const TableSection = ({
           SelectProps: {
             renderValue: (value) => {
               const selectedAlias = value as string;
-              const report = reports.find((report) => report.alias === selectedAlias);
+              const report = reports.find(
+                (report) => report.alias === selectedAlias
+              );
               return report?.type || "Нет данных";
             },
           },
@@ -100,8 +116,10 @@ const TableSection = ({
         accessorKey: "dateReport",
         header: "Дата",
         size: 130,
-        accessorFn: (row) => new Date(row.dateReport),
-        Cell: ({ cell }) => cell.getValue<Date>()?.toLocaleDateString(),
+        accessorFn: (row) =>
+          new Date(row.dateReport).toISOString().split("T")[0] || "",
+        Cell: ({ cell }) =>
+          new Date(cell.getValue<Date>())?.toLocaleDateString() || "",
         muiEditTextFieldProps: {
           required: true,
           type: "date",
@@ -124,15 +142,19 @@ const TableSection = ({
         muiEditTextFieldProps: {
           required: true,
           type: "number",
+          InputProps: {
+            inputProps: {
+              min: 0,
+              step: 1,
+            },
+          },
           error: !!validationErrors?.reportNo,
           helperText: validationErrors?.reportNo,
-          //remove any previous validation errors when user focuses on the input
           onFocus: () =>
             setValidationErrors({
               ...validationErrors,
               reportNo: undefined,
             }),
-          //optionally add validation checking for onBlur or onChange
         },
       },
       {
@@ -147,13 +169,11 @@ const TableSection = ({
           required: true,
           error: !!validationErrors?.description,
           helperText: validationErrors?.description,
-          //remove any previous validation errors when user focuses on the input
           onFocus: () =>
             setValidationErrors({
               ...validationErrors,
               description: undefined,
             }),
-          //optionally add validation checking for onBlur or onChange
         },
       },
       {
@@ -164,7 +184,7 @@ const TableSection = ({
         enableSorting: false,
         filterVariant: "multi-select",
         editVariant: "select",
-        editSelectOptions: uniqueEvents,
+        editSelectOptions: eventTypes,
         muiEditTextFieldProps: {
           select: true,
           required: true,
@@ -173,13 +193,11 @@ const TableSection = ({
         },
       },
     ],
-    [uniqueEvents, validationErrors]
+    [validationErrors]
   );
 
   function createUser(values: IReport) {
-    console.log('values');
-    console.log(values);
-    setReportsData((prevReportsData) => [...prevReportsData, values]);
+    setReportsData((prevReportsData) => [values, ...prevReportsData]);
   }
 
   const handleCreateReport: MRT_TableOptions<IReport>["onCreatingRowSave"] = ({
@@ -193,28 +211,10 @@ const TableSection = ({
     }
     setValidationErrors({});
     createUser(values);
+
+    table.setSorting(table.getState().sorting);
     table.setCreatingRow(null);
   };
-
-  const validateRequired = (value: string) => !!value.length;
-
-  function validateReport(report: IReport) {
-    return {
-      dateReport: !validateRequired(report.dateReport)
-        ? "Дата обязательна"
-        : "",
-      description: !validateRequired(report.description)
-        ? "Описание обязательно"
-        : "",
-      eventCode: !validateRequired(report.eventCode)
-        ? "Выбор мероприятия обязателен"
-        : "",
-      reportAlias: !validateRequired(report.reportAlias)
-        ? "Выбор типа обязателен"
-        : "",
-      reportNo: !validateRequired(report.reportNo) ? "№ обязателен" : "",
-    };
-  }
 
   const table = useMaterialReactTable({
     columns,
@@ -227,6 +227,7 @@ const TableSection = ({
     enableBottomToolbar: false,
     enableColumnResizing: true,
     enableEditing: false,
+    positionCreatingRow: "top",
     createDisplayMode: "modal",
     onCreatingRowCancel: () => setValidationErrors({}),
     onCreatingRowSave: handleCreateReport,
