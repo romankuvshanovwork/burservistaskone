@@ -11,6 +11,12 @@ import InputLabel from "@mui/material/InputLabel/InputLabel";
 import FormControl from "@mui/material/FormControl/FormControl";
 import { eventTypes } from "../../constants/eventTypes";
 import { reports } from "../../constants/reports";
+import { IReport } from "../../interfaces/IReport";
+import { useLocation } from "react-router-dom";
+import { useParams } from "react-router-dom";
+import { useSites } from "../../api/useSites";
+import { useWells } from "../../api/useWells";
+import FormHelperText from "@mui/material/FormHelperText/FormHelperText";
 
 const style = {
   position: "absolute" as "absolute",
@@ -26,15 +32,57 @@ const style = {
   p: 4,
 };
 
-export default function NewReportModal() {
+export default function NewReportModal({
+  allReportsData,
+  onAllReportsDataChange,
+  currentSiteId,
+}: {
+  allReportsData: IReport[];
+  onAllReportsDataChange: Function;
+  currentSiteId: String;
+}) {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleClose = () => {
+    setOpen(false);
+    reset();
+  };
 
-  const { control, handleSubmit } = useForm();
+  const {
+    control,
+    watch,
+    reset,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+
+  const location = useLocation();
+  const projectName = location?.state?.projectName;
+
+  const routeParams = useParams();
+  const projectId = routeParams?.projectId;
+
+  const { sites } = useSites(projectId);
+  const siteId = watch("siteId");
+
+  const { wells } = useWells(siteId || currentSiteId);
+  console.log("wells");
+  console.log(wells);
+
+  console.log("sites");
+  console.log(sites);
+
+  React.useEffect(() => {
+    console.log("siteId");
+    console.log(siteId);
+    console.log("currentSiteId");
+    console.log(currentSiteId);
+  });
 
   const onSubmit = (data: any) => {
     console.log(data);
+    onAllReportsDataChange((reports: IReport[]) => [data, ...reports]);
+    handleClose();
   };
 
   return (
@@ -59,7 +107,7 @@ export default function NewReportModal() {
               <Controller
                 name="projectId"
                 control={control}
-                defaultValue="Харасавэйское ГКМ"
+                defaultValue={projectName}
                 render={({ field }) => (
                   <TextField
                     {...field}
@@ -74,9 +122,14 @@ export default function NewReportModal() {
               <Controller
                 name="siteId"
                 control={control}
-                defaultValue="21"
+                defaultValue={currentSiteId}
+                rules={{ required: "Куст обязателен" }}
                 render={({ field }) => (
-                  <FormControl margin="normal" fullWidth>
+                  <FormControl
+                    margin="normal"
+                    fullWidth
+                    error={!!errors.siteId}
+                  >
                     <InputLabel id="site-id-select-label">Куст</InputLabel>
                     <Select
                       {...field}
@@ -84,19 +137,34 @@ export default function NewReportModal() {
                       id="site-id-select"
                       label="Куст"
                     >
-                      <MenuItem value={"21"}>21</MenuItem>
-                      <MenuItem value={"7"}>7</MenuItem>
-                      <MenuItem value={"20"}>20</MenuItem>
+                      {sites.map((site) => (
+                        <MenuItem key={site.siteId} value={site.siteId}>
+                          {site.siteName}
+                        </MenuItem>
+                      ))}
                     </Select>
+
+                    {errors.siteId && (
+                      <FormHelperText error>
+                        {typeof errors.siteId.message === "string"
+                          ? errors.siteId.message
+                          : "Invalid selection"}
+                      </FormHelperText>
+                    )}
                   </FormControl>
                 )}
               />
               <Controller
                 name="wellId"
                 control={control}
-                defaultValue="3uj7VcguFo"
+                defaultValue=""
+                rules={{ required: "Скважина обязательна" }}
                 render={({ field }) => (
-                  <FormControl margin="normal" fullWidth>
+                  <FormControl
+                    margin="normal"
+                    fullWidth
+                    error={!!errors.wellId}
+                  >
                     <InputLabel id="well-id-select-label">Скважина</InputLabel>
                     <Select
                       {...field}
@@ -104,19 +172,33 @@ export default function NewReportModal() {
                       id="well-id-select"
                       label="Скважина"
                     >
-                      <MenuItem value={"3uj7VcguFo"}>Скважина: 2214</MenuItem>
-                      <MenuItem value={"AJS9ZGKaWg"}>Скважина: 2212</MenuItem>
-                      <MenuItem value={"HAU3vQ3CuY"}>Скважина: 2213</MenuItem>
+                      {wells.map((well) => (
+                        <MenuItem key={well.wellId} value={well.wellId}>
+                          Скважина: {well.wellCommonName}
+                        </MenuItem>
+                      ))}
                     </Select>
+                    {errors.wellId && (
+                      <FormHelperText error>
+                        {typeof errors.wellId.message === "string"
+                          ? errors.wellId.message
+                          : "Invalid selection"}
+                      </FormHelperText>
+                    )}
                   </FormControl>
                 )}
               />
               <Controller
-                name="entityType"
+                name="reportAlias"
                 control={control}
                 defaultValue="DDR"
+                rules={{ required: "Тип отчета обязателен" }}
                 render={({ field }) => (
-                  <FormControl margin="normal" fullWidth>
+                  <FormControl
+                    margin="normal"
+                    fullWidth
+                    error={!!errors.reportAlias}
+                  >
                     <InputLabel id="entity-type-select-label">Тип</InputLabel>
                     <Select
                       {...field}
@@ -130,12 +212,20 @@ export default function NewReportModal() {
                         </MenuItem>
                       ))}
                     </Select>
+                    {errors.reportAlias && (
+                      <FormHelperText error>
+                        {typeof errors.reportAlias?.message === "string"
+                          ? errors.reportAlias?.message
+                          : "Invalid selection"}
+                      </FormHelperText>
+                    )}
                   </FormControl>
                 )}
               />
               <Controller
                 name="dateReport"
                 control={control}
+                rules={{ required: "Дата обязательна" }}
                 defaultValue={new Date().toISOString().substring(0, 10)}
                 render={({ field }) => (
                   <TextField
@@ -145,12 +235,23 @@ export default function NewReportModal() {
                     variant="outlined"
                     fullWidth
                     margin="normal"
+                    error={!!errors.dateReport}
+                    helperText={
+                      errors.dateReport ? String(errors.dateReport.message) : ""
+                    }
                   />
                 )}
               />
               <Controller
                 name="reportNo"
                 control={control}
+                rules={{
+                  required: "№ обязателен",
+                  min: {
+                    value: 0,
+                    message: "№ должен быть целым числом не меньше нуля",
+                  },
+                }}
                 defaultValue=""
                 render={({ field }) => (
                   <TextField
@@ -160,13 +261,15 @@ export default function NewReportModal() {
                     type="number"
                     fullWidth
                     margin="normal"
-                    
+                    error={!!errors.reportNo}
+                    helperText={
+                      errors.reportNo ? String(errors.reportNo.message) : ""
+                    }
                     slotProps={{
-                        htmlInput: {
-                          min: 0,
-                        },
-                      }}
-                    
+                      htmlInput: {
+                        min: 0,
+                      },
+                    }}
                   />
                 )}
               />
@@ -174,6 +277,7 @@ export default function NewReportModal() {
                 name="description"
                 control={control}
                 defaultValue=""
+                rules={{ required: "Описание обязательно" }}
                 render={({ field }) => (
                   <TextField
                     {...field}
@@ -183,15 +287,26 @@ export default function NewReportModal() {
                     multiline
                     minRows={4}
                     margin="normal"
+                    error={!!errors.description}
+                    helperText={
+                      errors.description
+                        ? String(errors.description.message)
+                        : ""
+                    }
                   />
                 )}
               />
               <Controller
                 name="eventCode"
                 control={control}
+                rules={{ required: "Мероприятие обязательно" }}
                 defaultValue="БУР"
                 render={({ field }) => (
-                  <FormControl margin="normal" fullWidth>
+                  <FormControl
+                    margin="normal"
+                    fullWidth
+                    error={!!errors.eventCode}
+                  >
                     <InputLabel id="event-code-select-label">
                       Мероприятие
                     </InputLabel>
@@ -207,6 +322,13 @@ export default function NewReportModal() {
                         </MenuItem>
                       ))}
                     </Select>
+                    {errors.eventCode && (
+                      <FormHelperText error>
+                        {typeof errors.eventCode?.message === "string"
+                          ? errors.eventCode?.message
+                          : "Invalid selection"}
+                      </FormHelperText>
+                    )}
                   </FormControl>
                 )}
               />

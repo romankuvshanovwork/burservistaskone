@@ -13,6 +13,7 @@ export default function OilWellCard({
   onIsGenPlanFilterOnChange,
   eventFilters,
   onEventFiltersChange,
+  onCurrentSiteIdChange,
 }: {
   wellWithSiteData: IWellWithSiteData;
   onCurrentWellIdChange: Function;
@@ -20,6 +21,7 @@ export default function OilWellCard({
   onIsGenPlanFilterOnChange: Function;
   eventFilters: String[];
   onEventFiltersChange: Function;
+  onCurrentSiteIdChange: Function;
 }) {
   const { uniqueEvents } = useUniqueEvents(wellWithSiteData?.wellId);
 
@@ -56,7 +58,10 @@ export default function OilWellCard({
   return (
     <Box sx={{ minWidth: 275 }}>
       <Card
-        onClick={() => onCurrentWellIdChange(wellWithSiteData?.wellId)}
+        onClick={() => {
+          onCurrentWellIdChange(wellWithSiteData?.wellId);
+          onCurrentSiteIdChange(wellWithSiteData?.siteId);
+        }}
         sx={{
           border:
             currentWellId === wellWithSiteData?.wellId

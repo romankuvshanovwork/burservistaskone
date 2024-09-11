@@ -44,10 +44,16 @@ const TableSection = ({
   currentWellId,
   isGenPlanFilterOn,
   eventFilters,
+  allReportsData,
+  onAllReportsDataChange,
+  currentSiteId
 }: {
   currentWellId: String;
   isGenPlanFilterOn?: boolean;
   eventFilters: String[];
+  allReportsData: IReport[];
+  onAllReportsDataChange: Function;
+  currentSiteId: String
 }) => {
   // Table state
   const [columnFilters, setColumnFilters] = useState<MRT_ColumnFiltersState>(
@@ -63,7 +69,9 @@ const TableSection = ({
   const { data, isError, isLoading, isRefetching, rowCount } =
     useReports(currentWellId);
 
-  useEffect(() => setReportsData(data), [data]);
+  // useEffect(() => setReportsData(data), [data]);
+
+  useEffect(()=> setReportsData(allReportsData.filter(item => item.wellId === currentWellId)), [allReportsData, currentWellId]);
 
   useEffect(() => {
     const filters = [];
@@ -305,7 +313,7 @@ const TableSection = ({
     <Box sx={{ paddingX: "30px", paddingY: "10px", marginBottom: "25px" }}>
       <Box sx={{display: 'flex', flexDirection: 'row', columnGap: '15px', marginBottom: '10px'}}>
         <TableSectionTitle title="Отчеты" />
-        <NewReportModal />
+        <NewReportModal currentSiteId={currentSiteId} allReportsData={allReportsData} onAllReportsDataChange={onAllReportsDataChange} />
       </Box>
       <MaterialReactTable table={table} />
     </Box>

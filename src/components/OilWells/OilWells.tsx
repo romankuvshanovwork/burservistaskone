@@ -19,12 +19,14 @@ export default function OilWells({
   onIsGenPlanFilterOnChange,
   onEventFiltersChange,
   eventFilters,
+  onCurrentSiteIdChange,
 }: {
   currentWellId: String;
   onCurrentWellIdChange: Function;
   onIsGenPlanFilterOnChange: Function;
   onEventFiltersChange: Function;
   eventFilters: String[];
+  onCurrentSiteIdChange: Function;
 }) {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(
@@ -92,6 +94,7 @@ export default function OilWells({
                 onIsGenPlanFilterOnChange={onIsGenPlanFilterOnChange}
                 eventFilters={eventFilters}
                 onEventFiltersChange={onEventFiltersChange}
+                onCurrentSiteIdChange={onCurrentSiteIdChange}
               />
             ))
             .slice(page * rowsPerPage)}
