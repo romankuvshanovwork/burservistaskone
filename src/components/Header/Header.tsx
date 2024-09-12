@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -10,16 +10,18 @@ import HeaderSearch from "../UI/HeaderSearch/HeaderSearch";
 import { useProjects } from "../../api/useProjects";
 
 export default function Header() {
-  const [serachQuery, setSearchQuery] = useState<string>();
+  const [serachQuery, setSearchQuery] = useState<string>("");
   const routeParams = useParams();
   const navigate = useNavigate();
   const projects = useProjects();
 
-  const firstProject = projects?.[0];
-  if (!routeParams?.projectId)
-    navigate(`/projectId/${firstProject?.projectId}`, {
-      state: { projectName: firstProject?.projectName },
-    });
+  useEffect(() => {
+    const firstProject = projects?.[0];
+    if (!routeParams?.projectId && firstProject?.projectId)
+      navigate(`/projectId/${firstProject?.projectId}`, {
+        state: { projectName: firstProject?.projectName },
+      });
+  }, [navigate, projects, routeParams?.projectId]);
 
   const filteredProjects = useMemo(
     () =>

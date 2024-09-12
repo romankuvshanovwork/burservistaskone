@@ -3,7 +3,6 @@ import {
   createRow,
   MaterialReactTable,
   useMaterialReactTable,
-  MRT_EditActionButtons,
   MRT_TableOptions,
   type MRT_ColumnDef,
   type MRT_ColumnFiltersState,
@@ -13,14 +12,11 @@ import { IReport } from "../../interfaces/IReport";
 import { reports } from "../../constants/reports";
 import TableSectionTitle from "../UI/TableSectionTitle/TableSectionTitle";
 import { genPlanFilter } from "../../constants/genPlanFilter";
-import useReports from "../../api/useReports";
 import Button from "@mui/material/Button/Button";
-import DialogTitle from "@mui/material/DialogTitle/DialogTitle";
-import DialogContent from "@mui/material/DialogContent/DialogContent";
-import DialogActions from "@mui/material/DialogActions/DialogActions";
 import MenuItem from "@mui/material/MenuItem/MenuItem";
 import { eventTypes } from "../../constants/eventTypes";
 import NewReportModal from "../NewReportModal/NewReportModal";
+import TableSectionDialogContent from "./TableSectionDialogContent/TableSectionDialogContent";
 
 const validateRequired = (value: string) => !!value.length;
 
@@ -271,19 +267,11 @@ const TableSection = ({
       </Button>
     ),
     renderCreateRowDialogContent: ({ table, row, internalEditComponents }) => (
-      // TODO: Можно выделить в отдельный компонент. И похожие кусочки кода в этом файле тоже можно выделить
-      <>
-        <DialogTitle>Создать отчет</DialogTitle>
-        <DialogContent
-          sx={{ display: "flex", flexDirection: "column", gap: "1rem" }}
-        >
-          {internalEditComponents}
-        </DialogContent>
-        <DialogActions>
-          {/* eslint-disable-next-line react/jsx-pascal-case  */}
-          <MRT_EditActionButtons variant="text" table={table} row={row} />
-        </DialogActions>
-      </>
+      <TableSectionDialogContent
+        table={table}
+        row={row}
+        internalEditComponents={internalEditComponents}
+      />
     ),
     manualFiltering: false,
     enableColumnFilters: false,

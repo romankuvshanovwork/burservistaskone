@@ -33,75 +33,81 @@ export function useAllData() {
   }, []);
 
   useEffect(() => {
-    setIsLoading(true);
     const allProjectsAsString = allProjects
       .map((project: IProject) => project?.projectId)
       .filter((x, i, a) => a.indexOf(x) === i) // Filter: unique only
       .join();
 
-    axios
-      .get(
-        `${BASE_URL}/Universal/CdSiteSource/projectId/${allProjectsAsString}/?fields=projectId,siteId,siteName`
-      )
-      .then((response) => {
-        setAllSites(response.data);
-        setIsError(false);
-      })
-      .catch((error) => {
-        setIsError(true);
-        console.error("Error fetching sites:", error);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
+    if (allProjectsAsString) {
+      setIsLoading(true);
+      axios
+        .get(
+          `${BASE_URL}/Universal/CdSiteSource/projectId/${allProjectsAsString}/?fields=projectId,siteId,siteName`
+        )
+        .then((response) => {
+          setAllSites(response.data);
+          setIsError(false);
+        })
+        .catch((error) => {
+          setIsError(true);
+          console.error("Error fetching sites:", error);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+    }
   }, [allProjects]);
 
   useEffect(() => {
-    setIsLoading(true);
     const allSitesAsString = allSites
       .map((site: ISite) => site?.siteId)
       .filter((x, i, a) => a.indexOf(x) === i) // Filter: unique only
       .join();
 
-    axios
-      .get(
-        `${BASE_URL}/Universal/CdWellSource/siteId/${allSitesAsString}/?fields=siteId,wellCommonName,wellId,spudDate,reason`
-      )
-      .then((response) => {
-        setAllWells(response.data);
-        setIsError(false);
-      })
-      .catch((error) => {
-        setIsError(true);
-        console.error("Error fetching wells:", error);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
+    if (allSitesAsString) {
+      setIsLoading(true);
+      axios
+        .get(
+          `${BASE_URL}/Universal/CdWellSource/siteId/${allSitesAsString}/?fields=siteId,wellCommonName,wellId,spudDate,reason`
+        )
+        .then((response) => {
+          setAllWells(response.data);
+          setIsError(false);
+        })
+        .catch((error) => {
+          setIsError(true);
+          console.error("Error fetching wells:", error);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+    }
   }, [allSites]);
 
   useEffect(() => {
-    setIsLoading(true);
     const allWellsAsString = allWells
       .map((well: IWell) => well?.wellId)
       .filter((x, i, a) => a.indexOf(x) === i) // Filter: unique only
       .join();
 
-    axios
-      .get(
-        `${BASE_URL}/Universal/DmReportJournal/wellId/${allWellsAsString}/?fields=eventCode,reportJournalId,wellId,wellboreId,dateReport,eventId,reportAlias,description,entityType,reportNo`
-      )
-      .then((response) => {
-        setAllReports(response.data);
-        setIsError(false);
-      })
-      .catch((error) => {
-        setIsError(true);
-        console.error("Error fetching reports:", error);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
+    if (allWellsAsString) {
+      setIsLoading(true);
+      axios
+        .get(
+          `${BASE_URL}/Universal/DmReportJournal/wellId/${allWellsAsString}/?fields=eventCode,reportJournalId,wellId,wellboreId,dateReport,eventId,reportAlias,description,entityType,reportNo`
+        )
+        .then((response) => {
+          setAllReports(response.data);
+          setIsError(false);
+        })
+        .catch((error) => {
+          setIsError(true);
+          console.error("Error fetching reports:", error);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+    }
   }, [allWells]);
 
   return { allProjects, allSites, allWells, allReports, isLoading, isError };
