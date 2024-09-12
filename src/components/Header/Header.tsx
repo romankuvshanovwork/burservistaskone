@@ -56,6 +56,7 @@ export default function Header() {
                 columnGap: "5px",
               }}
             >
+              {/* TODO: Подумать, посмотреть стоит ли выносить в отдельный компонент */}
               {filteredProjects.map((project) => (
                 <Button
                   component={RouterLink}

@@ -11,9 +11,9 @@ export function useAllData() {
   const [allSites, setAllSites] = useState<ISite[]>([]);
   const [allWells, setAllWells] = useState<IWell[]>([]);
   const [allReports, setAllReports] = useState<IReport[]>([]);
+
   const [isError, setIsError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [isRefetching, setIsRefetching] = useState(false);
 
   useEffect(() => {
     setIsLoading(true);
@@ -21,13 +21,14 @@ export function useAllData() {
       .get(`${BASE_URL}/Universal/CdProjectSource?fields=projectName,projectId`)
       .then(function (response) {
         setAllProjects(response.data);
-        setIsLoading(false);
         setIsError(false);
       })
       .catch(function (error) {
         setIsError(true);
-        setIsLoading(false);
         console.error("Error fetching projects:", error);
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   }, []);
 
@@ -44,13 +45,14 @@ export function useAllData() {
       )
       .then((response) => {
         setAllSites(response.data);
-        setIsLoading(false);
         setIsError(false);
       })
       .catch((error) => {
         setIsError(true);
-        setIsLoading(false);
         console.error("Error fetching sites:", error);
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   }, [allProjects]);
 
@@ -67,13 +69,14 @@ export function useAllData() {
       )
       .then((response) => {
         setAllWells(response.data);
-        setIsLoading(false);
         setIsError(false);
       })
       .catch((error) => {
         setIsError(true);
-        setIsLoading(false);
         console.error("Error fetching wells:", error);
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   }, [allSites]);
 
@@ -90,13 +93,14 @@ export function useAllData() {
       )
       .then((response) => {
         setAllReports(response.data);
-        setIsLoading(false);
         setIsError(false);
       })
       .catch((error) => {
         setIsError(true);
-        setIsLoading(false);
         console.error("Error fetching reports:", error);
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   }, [allWells]);
 

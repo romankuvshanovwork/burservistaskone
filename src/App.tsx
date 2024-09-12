@@ -15,18 +15,9 @@ function App() {
   const [eventFilters, setEventFilters] = useState<String[]>([]); // Массив с фильтрами: БУР, ОСВ, ABN
 
   const [allReportsData, setAllReportsData] = useState<IReport[]>([]);
-  const { allProjects, allSites, allWells, allReports, isLoading, isError } = useAllData();
+  const { allReports, isLoading, isError } = useAllData();
 
   useEffect(() => setAllReportsData(allReports), [allReports]);
-
-  console.log('allProjects');
-  console.log(allProjects);
-  console.log('allSites');
-  console.log(allSites);
-  console.log('allWells');
-  console.log(allWells);
-  console.log('allReports');
-  console.log(allReports);
 
   return (
     <Routes>

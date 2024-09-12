@@ -34,11 +34,9 @@ const style = {
 };
 
 export default function NewReportModal({
-  allReportsData,
   onAllReportsDataChange,
   currentSiteId,
 }: {
-  allReportsData: IReport[];
   onAllReportsDataChange: Function;
   currentSiteId: String;
 }) {
@@ -67,22 +65,23 @@ export default function NewReportModal({
   const currentFormSiteId = watch("siteId");
 
   const { wells } = useWells(currentFormSiteId || currentSiteId);
-  console.log("wells");
-  console.log(wells);
-
-  console.log("sites");
-  console.log(sites);
-
-  React.useEffect(() => {
-    console.log("siteId");
-    console.log(currentFormSiteId);
-    console.log("currentSiteId");
-    console.log(currentSiteId);
-  });
 
   const onSubmit = (data: any) => {
     console.log(data);
-    onAllReportsDataChange((reports: IReport[]) => [data, ...reports]);
+    onAllReportsDataChange((reports: IReport[]) => [
+      {
+        reportJournalId: window?.crypto?.randomUUID()?.substring(0, 8) || "",
+        wellId: data?.wellId,
+        dateReport: data?.dateReport,
+        reportNo: data?.reportNo,
+        description: data?.description,
+        // TODO: Исправить наименование констант, чтобы избежать конфликтов в наимнованиях
+        // entityType:  reports.find(report => report?.alias === 'CASING')?.type,
+        eventCode: data?.eventCode,
+        reportAlias: data?.reportAlias,
+      },
+      ...reports,
+    ]);
     handleClose();
   };
 

@@ -40,6 +40,7 @@ export default function OilWellCardActions({
           marginLeft: "8px",
         }}
       >
+        {/* TODO: Посмотреть можно ли, стоит ли выносить все map в отдельные компоненты */}
         {uniqueEvents?.map((uniqueEvent: string) => (
           <Chip
             label={uniqueEvent}

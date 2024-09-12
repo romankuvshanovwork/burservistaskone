@@ -48,7 +48,7 @@ const TableSection = ({
   onAllReportsDataChange,
   currentSiteId,
   isLoading,
-  isError
+  isError,
 }: {
   currentWellId: String;
   isGenPlanFilterOn?: boolean;
@@ -69,11 +69,7 @@ const TableSection = ({
   >({});
 
   const [reportsData, setReportsData] = useState<IReport[]>([]);
-
-  const { data,  isRefetching, rowCount } =
-    useReports(currentWellId);
-
-  // useEffect(() => setReportsData(data), [data]);
+  const isRefetching = false;
 
   useEffect(
     () =>
@@ -275,6 +271,7 @@ const TableSection = ({
       </Button>
     ),
     renderCreateRowDialogContent: ({ table, row, internalEditComponents }) => (
+      // TODO: Можно выделить в отдельный компонент. И похожие кусочки кода в этом файле тоже можно выделить
       <>
         <DialogTitle>Создать отчет</DialogTitle>
         <DialogContent
@@ -333,7 +330,6 @@ const TableSection = ({
         <TableSectionTitle title="Отчеты" />
         <NewReportModal
           currentSiteId={currentSiteId}
-          allReportsData={allReportsData}
           onAllReportsDataChange={onAllReportsDataChange}
         />
       </Box>
