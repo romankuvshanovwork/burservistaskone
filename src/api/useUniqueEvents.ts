@@ -19,7 +19,10 @@ const useUniqueEvents = (wellId: string) => {
           const events = response.data;
           const uniqueEventCodes = events
             ?.map((event: IEvent) => event?.eventCode)
-            ?.filter((element: IEvent, index: number, array: IEvent[]) => array.indexOf(element) === index) // Filter: left unique elements only
+            ?.filter(
+              (element: IEvent, index: number, array: IEvent[]) =>
+                array.indexOf(element) === index
+            ) // Filter: left unique elements only
             ?.filter((event: string) => event); // Filter: No empty values
           // Cache the data
           setEventCache((prevCache) => ({

@@ -46,14 +46,14 @@ const TableSection = ({
   eventFilters,
   allReportsData,
   onAllReportsDataChange,
-  currentSiteId
+  currentSiteId,
 }: {
   currentWellId: String;
   isGenPlanFilterOn?: boolean;
   eventFilters: String[];
   allReportsData: IReport[];
   onAllReportsDataChange: Function;
-  currentSiteId: String
+  currentSiteId: String;
 }) => {
   // Table state
   const [columnFilters, setColumnFilters] = useState<MRT_ColumnFiltersState>(
@@ -71,7 +71,13 @@ const TableSection = ({
 
   // useEffect(() => setReportsData(data), [data]);
 
-  useEffect(()=> setReportsData(allReportsData.filter(item => item.wellId === currentWellId)), [allReportsData, currentWellId]);
+  useEffect(
+    () =>
+      setReportsData(
+        allReportsData.filter((item) => item.wellId === currentWellId)
+      ),
+    [allReportsData, currentWellId]
+  );
 
   useEffect(() => {
     const filters = [];
@@ -88,6 +94,7 @@ const TableSection = ({
   }, [isGenPlanFilterOn, eventFilters]);
 
   const columns = useMemo<MRT_ColumnDef<IReport>[]>(
+    // Не могу вынести из функции компонента так как используется хук useMemo и
     () => [
       {
         accessorKey: "reportAlias",
@@ -311,9 +318,20 @@ const TableSection = ({
 
   return (
     <Box sx={{ paddingX: "30px", paddingY: "10px", marginBottom: "25px" }}>
-      <Box sx={{display: 'flex', flexDirection: 'row', columnGap: '15px', marginBottom: '10px'}}>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "row",
+          columnGap: "15px",
+          marginBottom: "10px",
+        }}
+      >
         <TableSectionTitle title="Отчеты" />
-        <NewReportModal currentSiteId={currentSiteId} allReportsData={allReportsData} onAllReportsDataChange={onAllReportsDataChange} />
+        <NewReportModal
+          currentSiteId={currentSiteId}
+          allReportsData={allReportsData}
+          onAllReportsDataChange={onAllReportsDataChange}
+        />
       </Box>
       <MaterialReactTable table={table} />
     </Box>

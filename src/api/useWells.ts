@@ -1,10 +1,7 @@
 import { useState, useEffect } from "react";
-import { IProject } from "../interfaces/IProject";
 import { BASE_URL } from "../constants/baseURL";
 import axios from "axios";
-import { ISite } from "../interfaces/ISite";
 import { IWell } from "../interfaces/IWell";
-import { IReport } from "../interfaces/IReport";
 
 export function useWells(siteId: string | undefined) {
   const [wells, setWells] = useState<IWell[]>([]);

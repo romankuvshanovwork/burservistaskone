@@ -13,6 +13,7 @@ function App() {
   const [currentSiteId, setCurrentSiteId] = useState<String>(""); // Текущий выбранный куст
   const [isGenPlanFilterOn, setIsGenPlanFilterOn] = useState(false); // Включен ли фильтр по ген. плану
   const [eventFilters, setEventFilters] = useState<String[]>([]); // Массив с фильтрами: БУР, ОСВ, ABN
+  
   const [allReportsData, setAllReportsData] = useState<IReport[]>([]);
   const { allProjects, allSites, allWells, allReports } = useAllData();
 
