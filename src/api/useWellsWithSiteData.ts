@@ -49,6 +49,7 @@ export function useWellsWithSiteData(
         } else {
           setWellsWithSiteData([]);
           onCurrentWellIdChange(0);
+          onCurrentSiteIdChange('0');
         }
         setLoading(false);
       })
@@ -56,7 +57,7 @@ export function useWellsWithSiteData(
         setError(error);
         setLoading(false);
       });
-  }, [onCurrentWellIdChange, projectId, wellsWithSiteData?.length]);
+  }, [onCurrentSiteIdChange, onCurrentWellIdChange, projectId, wellsWithSiteData?.length]);
 
   return { wellsWithSiteData, loading, error };
 }

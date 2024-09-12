@@ -47,6 +47,8 @@ const TableSection = ({
   allReportsData,
   onAllReportsDataChange,
   currentSiteId,
+  isLoading,
+  isError
 }: {
   currentWellId: String;
   isGenPlanFilterOn?: boolean;
@@ -54,6 +56,8 @@ const TableSection = ({
   allReportsData: IReport[];
   onAllReportsDataChange: Function;
   currentSiteId: String;
+  isLoading: boolean;
+  isError: boolean;
 }) => {
   // Table state
   const [columnFilters, setColumnFilters] = useState<MRT_ColumnFiltersState>(
@@ -66,7 +70,7 @@ const TableSection = ({
 
   const [reportsData, setReportsData] = useState<IReport[]>([]);
 
-  const { data, isError, isLoading, isRefetching, rowCount } =
+  const { data,  isRefetching, rowCount } =
     useReports(currentWellId);
 
   // useEffect(() => setReportsData(data), [data]);
@@ -306,7 +310,7 @@ const TableSection = ({
       : undefined,
     onColumnFiltersChange: setColumnFilters,
     onGlobalFilterChange: setGlobalFilter,
-    rowCount,
+    rowCount: reportsData.length,
     state: {
       columnFilters,
       globalFilter,

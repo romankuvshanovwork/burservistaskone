@@ -11,19 +11,28 @@ export function useAllData() {
   const [allSites, setAllSites] = useState<ISite[]>([]);
   const [allWells, setAllWells] = useState<IWell[]>([]);
   const [allReports, setAllReports] = useState<IReport[]>([]);
+  const [isError, setIsError] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isRefetching, setIsRefetching] = useState(false);
 
   useEffect(() => {
+    setIsLoading(true);
     axios
       .get(`${BASE_URL}/Universal/CdProjectSource?fields=projectName,projectId`)
       .then(function (response) {
         setAllProjects(response.data);
+        setIsLoading(false);
+        setIsError(false);
       })
       .catch(function (error) {
+        setIsError(true);
+        setIsLoading(false);
         console.error("Error fetching projects:", error);
       });
   }, []);
 
   useEffect(() => {
+    setIsLoading(true);
     const allProjectsAsString = allProjects
       .map((project: IProject) => project?.projectId)
       .filter((x, i, a) => a.indexOf(x) === i) // Filter: unique only
@@ -35,13 +44,18 @@ export function useAllData() {
       )
       .then((response) => {
         setAllSites(response.data);
+        setIsLoading(false);
+        setIsError(false);
       })
       .catch((error) => {
+        setIsError(true);
+        setIsLoading(false);
         console.error("Error fetching sites:", error);
       });
   }, [allProjects]);
 
   useEffect(() => {
+    setIsLoading(true);
     const allSitesAsString = allSites
       .map((site: ISite) => site?.siteId)
       .filter((x, i, a) => a.indexOf(x) === i) // Filter: unique only
@@ -53,13 +67,18 @@ export function useAllData() {
       )
       .then((response) => {
         setAllWells(response.data);
+        setIsLoading(false);
+        setIsError(false);
       })
       .catch((error) => {
+        setIsError(true);
+        setIsLoading(false);
         console.error("Error fetching wells:", error);
       });
   }, [allSites]);
 
   useEffect(() => {
+    setIsLoading(true);
     const allWellsAsString = allWells
       .map((well: IWell) => well?.wellId)
       .filter((x, i, a) => a.indexOf(x) === i) // Filter: unique only
@@ -71,11 +90,15 @@ export function useAllData() {
       )
       .then((response) => {
         setAllReports(response.data);
+        setIsLoading(false);
+        setIsError(false);
       })
       .catch((error) => {
+        setIsError(true);
+        setIsLoading(false);
         console.error("Error fetching reports:", error);
       });
   }, [allWells]);
 
-  return { allProjects, allSites, allWells, allReports };
+  return { allProjects, allSites, allWells, allReports, isLoading, isError };
 }

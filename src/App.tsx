@@ -13,9 +13,9 @@ function App() {
   const [currentSiteId, setCurrentSiteId] = useState<String>(""); // Текущий выбранный куст
   const [isGenPlanFilterOn, setIsGenPlanFilterOn] = useState(false); // Включен ли фильтр по ген. плану
   const [eventFilters, setEventFilters] = useState<String[]>([]); // Массив с фильтрами: БУР, ОСВ, ABN
-  
+
   const [allReportsData, setAllReportsData] = useState<IReport[]>([]);
-  const { allProjects, allSites, allWells, allReports } = useAllData();
+  const { allProjects, allSites, allWells, allReports, isLoading, isError } = useAllData();
 
   useEffect(() => setAllReportsData(allReports), [allReports]);
 
@@ -52,6 +52,8 @@ function App() {
                 allReportsData={allReportsData}
                 onAllReportsDataChange={setAllReportsData}
                 currentSiteId={currentSiteId}
+                isLoading={isLoading}
+                isError={isError}
               />
             </>
           }
