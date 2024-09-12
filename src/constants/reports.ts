@@ -1,4 +1,4 @@
-export const reports = [
+export const REPORTS = [
   { type: "Суточный", alias: "DDR" },
   { type: "Крепление", alias: "CASING" },
   { type: "Цнементирование", alias: "GEN_CMT" },

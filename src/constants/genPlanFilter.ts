@@ -1,1 +1,1 @@
-export const genPlanFilter = { id: "reportAlias", value: "GEN_PLAN" };
+export const GEN_PLAN_FILTER = { id: "reportAlias", value: "GEN_PLAN" };

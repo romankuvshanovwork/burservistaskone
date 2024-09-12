@@ -2,12 +2,12 @@ import { useEffect, useMemo, useState } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
-import Button from "@mui/material/Button";
-import { Link as RouterLink, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import HeaderTitle from "../UI/HeaderTitle/HeaderTitle";
 import HeaderSearch from "../UI/HeaderSearch/HeaderSearch";
 import { useProjects } from "../../api/useProjects";
+import ProjectButtons from "./ProjectButtons/ProjectButtons";
 
 export default function Header() {
   const [serachQuery, setSearchQuery] = useState<string>("");
@@ -58,24 +58,7 @@ export default function Header() {
                 columnGap: "5px",
               }}
             >
-              {/* TODO: Подумать, посмотреть стоит ли выносить в отдельный компонент */}
-              {filteredProjects.map((project) => (
-                <Button
-                  component={RouterLink}
-                  to={`/projectId/${project?.projectId}`}
-                  state={{ projectName: project?.projectName }}
-                  key={project?.projectId}
-                  sx={{
-                    my: 2,
-                    color: "white",
-                    display: "block",
-                    whiteSpace: "nowrap",
-                    textAlign: "center",
-                  }}
-                >
-                  {project?.projectName}
-                </Button>
-              ))}
+              <ProjectButtons filteredProjects={filteredProjects} />
             </Box>
           </Box>
           <HeaderSearch onChange={(e: any) => setSearchQuery(e.target.value)} />

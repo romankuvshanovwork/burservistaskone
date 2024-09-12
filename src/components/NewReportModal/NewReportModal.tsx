@@ -18,6 +18,7 @@ import ReportNoField from "./ReportNoField/ReportNoField";
 import DescriptionField from "./DescriptionField/DescriptionField";
 import EventCodeField from "./EventCodeField/EventCodeField";
 import NewReportModalActionButtons from "./NewReportModalActionButtons/NewReportModalActionButtons";
+import { REPORTS } from "../../constants/reports";
 
 const style = {
   position: "absolute" as "absolute",
@@ -75,8 +76,7 @@ export default function NewReportModal({
         dateReport: data?.dateReport,
         reportNo: data?.reportNo,
         description: data?.description,
-        // TODO: Исправить наименование констант, чтобы избежать конфликтов в наимнованиях
-        // entityType:  reports.find(report => report?.alias === 'CASING')?.type,
+        entityType:  REPORTS?.find(report => report?.alias === 'CASING')?.type,
         eventCode: data?.eventCode,
         reportAlias: data?.reportAlias,
       },

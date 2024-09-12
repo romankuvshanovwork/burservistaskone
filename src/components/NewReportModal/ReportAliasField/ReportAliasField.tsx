@@ -4,7 +4,7 @@ import InputLabel from "@mui/material/InputLabel/InputLabel";
 import MenuItem from "@mui/material/MenuItem/MenuItem";
 import Select from "@mui/material/Select/Select";
 import { Controller, Control, FieldErrors } from "react-hook-form";
-import { reports } from "../../../constants/reports";
+import { REPORTS } from "../../../constants/reports";
 
 export default function ReportAliasField({
   control,
@@ -28,7 +28,7 @@ export default function ReportAliasField({
             id="entity-type-select"
             label="Тип"
           >
-            {reports.map((report) => (
+            {REPORTS.map((report) => (
               <MenuItem key={report.alias} value={report.alias}>
                 {report.type}
               </MenuItem>

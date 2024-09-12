@@ -9,12 +9,12 @@ import {
 } from "material-react-table";
 import Box from "@mui/material/Box";
 import { IReport } from "../../interfaces/IReport";
-import { reports } from "../../constants/reports";
+import { REPORTS } from "../../constants/reports";
 import TableSectionTitle from "../UI/TableSectionTitle/TableSectionTitle";
-import { genPlanFilter } from "../../constants/genPlanFilter";
+import { GEN_PLAN_FILTER } from "../../constants/genPlanFilter";
 import Button from "@mui/material/Button/Button";
 import MenuItem from "@mui/material/MenuItem/MenuItem";
-import { eventTypes } from "../../constants/eventTypes";
+import { EVENT_TYPES } from "../../constants/eventTypes";
 import NewReportModal from "../NewReportModal/NewReportModal";
 import TableSectionDialogContent from "./TableSectionDialogContent/TableSectionDialogContent";
 
@@ -84,7 +84,7 @@ const TableSection = ({
       });
     }
     if (isGenPlanFilterOn) {
-      filters.push(genPlanFilter);
+      filters.push(GEN_PLAN_FILTER);
     }
     setColumnFilters(filters);
   }, [isGenPlanFilterOn, eventFilters]);
@@ -99,10 +99,10 @@ const TableSection = ({
         enableSorting: false,
         filterVariant: "text",
         Cell: ({ cell }) =>
-          reports.find((report) => report?.alias === cell.getValue())?.type ||
+          REPORTS.find((report) => report?.alias === cell.getValue())?.type ||
           "Нет данных",
         editVariant: "select",
-        editSelectOptions: reports.map((report) => report.alias),
+        editSelectOptions: REPORTS.map((report) => report.alias),
         muiEditTextFieldProps: {
           select: true,
           required: true,
@@ -111,13 +111,13 @@ const TableSection = ({
           SelectProps: {
             renderValue: (value) => {
               const selectedAlias = value as string;
-              const report = reports.find(
+              const report = REPORTS.find(
                 (report) => report.alias === selectedAlias
               );
               return report?.type || "Нет данных";
             },
           },
-          children: reports.map((report) => (
+          children: REPORTS.map((report) => (
             <MenuItem key={report.alias} value={report.alias}>
               {report.type}
             </MenuItem>
@@ -196,7 +196,7 @@ const TableSection = ({
         enableSorting: false,
         filterVariant: "multi-select",
         editVariant: "select",
-        editSelectOptions: eventTypes,
+        editSelectOptions: EVENT_TYPES,
         muiEditTextFieldProps: {
           select: true,
           required: true,

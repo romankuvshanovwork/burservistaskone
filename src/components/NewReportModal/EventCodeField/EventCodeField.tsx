@@ -2,7 +2,7 @@ import { Controller, Control, FieldErrors } from "react-hook-form";
 import FormControl from "@mui/material/FormControl/FormControl";
 import InputLabel from "@mui/material/InputLabel/InputLabel";
 import Select from "@mui/material/Select/Select";
-import { eventTypes } from "../../../constants/eventTypes";
+import { EVENT_TYPES } from "../../../constants/eventTypes";
 import MenuItem from "@mui/material/MenuItem/MenuItem";
 import FormHelperText from "@mui/material/FormHelperText/FormHelperText";
 
@@ -28,7 +28,7 @@ export default function EventCodeField({
             id="event-code-select"
             label="Мероприятие"
           >
-            {eventTypes.map((eventType) => (
+            {EVENT_TYPES.map((eventType) => (
               <MenuItem key={eventType} value={eventType}>
                 {eventType}
               </MenuItem>
