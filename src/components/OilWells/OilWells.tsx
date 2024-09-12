@@ -21,11 +21,11 @@ export default function OilWells({
   eventFilters,
   onCurrentSiteIdChange,
 }: {
-  currentWellId: String;
+  currentWellId: string;
   onCurrentWellIdChange: Function;
   onIsGenPlanFilterOnChange: Function;
   onEventFiltersChange: Function;
-  eventFilters: String[];
+  eventFilters: string[];
   onCurrentSiteIdChange: Function;
 }) {
   const [page, setPage] = useState(0);

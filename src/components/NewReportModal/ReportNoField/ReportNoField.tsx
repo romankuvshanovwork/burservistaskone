@@ -29,7 +29,9 @@ export default function ReportNoField({
           fullWidth
           margin="normal"
           error={!!errors.reportNo}
-          helperText={errors.reportNo ? String(errors.reportNo.message) : ""}
+          helperText={
+            errors.reportNo ? (errors.reportNo.message as string) : ""
+          }
           slotProps={{
             htmlInput: {
               min: 1,

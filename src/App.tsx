@@ -9,10 +9,10 @@ import { useAllData } from "./api/useAllData";
 import { IReport } from "./interfaces/IReport";
 
 function App() {
-  const [currentWellId, setCurrentWellId] = useState<String>(""); // Текущая выбранная скважина
-  const [currentSiteId, setCurrentSiteId] = useState<String>(""); // Текущий выбранный куст
+  const [currentWellId, setCurrentWellId] = useState<string>(""); // Текущая выбранная скважина
+  const [currentSiteId, setCurrentSiteId] = useState<string>(""); // Текущий выбранный куст
   const [isGenPlanFilterOn, setIsGenPlanFilterOn] = useState(false); // Включен ли фильтр по ген. плану
-  const [eventFilters, setEventFilters] = useState<String[]>([]); // Массив с фильтрами: БУР, ОСВ, ABN
+  const [eventFilters, setEventFilters] = useState<string[]>([]); // Массив с фильтрами: БУР, ОСВ, ABN
 
   const [allReportsData, setAllReportsData] = useState<IReport[]>([]);
   const { allReports, isLoading, isError } = useAllData();

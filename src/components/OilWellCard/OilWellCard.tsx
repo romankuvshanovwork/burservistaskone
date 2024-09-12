@@ -17,9 +17,9 @@ export default function OilWellCard({
 }: {
   wellWithSiteData: IWellWithSiteData;
   onCurrentWellIdChange: Function;
-  currentWellId: String;
+  currentWellId: string;
   onIsGenPlanFilterOnChange: Function;
-  eventFilters: String[];
+  eventFilters: string[];
   onEventFiltersChange: Function;
   onCurrentSiteIdChange: Function;
 }) {

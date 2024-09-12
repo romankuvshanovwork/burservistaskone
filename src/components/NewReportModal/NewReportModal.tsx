@@ -39,7 +39,7 @@ export default function NewReportModal({
   currentSiteId,
 }: {
   onAllReportsDataChange: Function;
-  currentSiteId: String;
+  currentSiteId: string;
 }) {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
@@ -68,7 +68,6 @@ export default function NewReportModal({
   const { wells } = useWells(currentFormSiteId || currentSiteId);
 
   const onSubmit = (data: any) => {
-    console.log(data);
     onAllReportsDataChange((reports: IReport[]) => [
       {
         reportJournalId: window?.crypto?.randomUUID()?.substring(0, 8) || "",

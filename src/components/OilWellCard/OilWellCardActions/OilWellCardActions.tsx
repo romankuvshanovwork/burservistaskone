@@ -14,8 +14,8 @@ export default function OilWellCardActions({
   resetAllFilters,
 }: {
   uniqueEvents: string[];
-  eventFilters: String[];
-  currentWellId: String;
+  eventFilters: string[];
+  currentWellId: string;
   wellWithSiteData: IWellWithSiteData;
   activateTypeFilter: Function;
   activateGenPlanFilter: Function;

@@ -13,7 +13,7 @@ export default function SiteField({
   sites = [],
 }: {
   control: Control;
-  defaultValue: String;
+  defaultValue: string;
   errors: FieldErrors;
   sites: ISite[];
 }) {

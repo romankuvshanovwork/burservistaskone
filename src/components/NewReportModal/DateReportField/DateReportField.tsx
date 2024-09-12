@@ -24,7 +24,7 @@ export default function DateReportField({
           margin="normal"
           error={!!errors.dateReport}
           helperText={
-            errors.dateReport ? String(errors.dateReport.message) : ""
+            errors.dateReport ? (errors.dateReport.message as string) : ""
           }
         />
       )}

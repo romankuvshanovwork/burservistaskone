@@ -46,12 +46,12 @@ const TableSection = ({
   isLoading,
   isError,
 }: {
-  currentWellId: String;
+  currentWellId: string;
   isGenPlanFilterOn?: boolean;
-  eventFilters: String[];
+  eventFilters: string[];
   allReportsData: IReport[];
   onAllReportsDataChange: Function;
-  currentSiteId: String;
+  currentSiteId: string;
   isLoading: boolean;
   isError: boolean;
 }) => {
@@ -176,7 +176,7 @@ const TableSection = ({
         enableSorting: false,
         grow: true,
         filterVariant: "text",
-        Cell: ({ cell }) => cell.getValue<String>() || "Нет данных",
+        Cell: ({ cell }) => cell.getValue<string>() || "Нет данных",
         muiEditTextFieldProps: {
           required: true,
           error: !!validationErrors?.description,

@@ -3,7 +3,7 @@ import { IReport } from "../interfaces/IReport";
 import { BASE_URL } from "../constants/baseURL";
 import axios from "axios";
 
-const useReports = (currentWellId: String) => {
+const useReports = (currentWellId: string) => {
   const [data, setData] = useState<IReport[]>([]);
   const [isError, setIsError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);

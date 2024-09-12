@@ -25,7 +25,7 @@ export default function DescriptionField({
           margin="normal"
           error={!!errors.description}
           helperText={
-            errors.description ? String(errors.description.message) : ""
+            errors.description ? (errors.description.message as string) : ""
           }
         />
       )}
