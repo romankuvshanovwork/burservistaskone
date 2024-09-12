@@ -7,6 +7,7 @@ import { IWellWithSiteData } from "../interfaces/IWellWithSiteData";
 
 export function useWellsWithSiteData(
   onCurrentWellIdChange: Function,
+  onCurrentSiteIdChange: Function,
   projectId?: string
 ) {
   const [wellsWithSiteData, setWellsWithSiteData] = useState<IWellWithSiteData[]>([]);
@@ -37,6 +38,7 @@ export function useWellsWithSiteData(
             .then((response) => {
               const wells = response.data;
               onCurrentWellIdChange(wells[0]?.wellId);
+              onCurrentSiteIdChange(wells[0]?.siteId);
               setWellsWithSiteData(
                 wells.map((well: IWell) => ({
                   ...well,

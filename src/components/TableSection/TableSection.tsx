@@ -94,7 +94,7 @@ const TableSection = ({
   }, [isGenPlanFilterOn, eventFilters]);
 
   const columns = useMemo<MRT_ColumnDef<IReport>[]>(
-    // Не могу вынести из функции компонента так как используется хук useMemo и
+    // Не могу вынести из функции компонента так как используется хук useMemo
     () => [
       {
         accessorKey: "reportAlias",

@@ -38,6 +38,7 @@ export default function OilWells({
 
   const { wellsWithSiteData, loading, error } = useWellsWithSiteData(
     onCurrentWellIdChange,
+    onCurrentSiteIdChange,
     projectId
   );
 
